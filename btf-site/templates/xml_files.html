@@ -1,0 +1,13 @@
+			<div class="header">
+				<div class="navbox">
+					<span>XML Reports:</span>
+					<span class="spanright"> 
+						<input type="file" id="inputfiles" name="files[]" multiple accept=".xml"/>
+						<label for="inputfiles">
+							<img class="imgbutton" title="select xml reports" src={{ url_for('.static', filename='images/if_upload.png') }}/>
+						</label>
+						<input type="image" title="remove xml reports" src={{ url_for('.static', filename='images/if_remove.png') }} id="erase_inputfiles" name="erase_inputfiles" class="imgbutton" />
+					</span>
+				</div>
+				<div id="show_inputfiles" class="xml_reports_box"></div>
+			</div>

@@ -1,0 +1,29 @@
+                <div class="boxleft">
+                    <div class="filtertitle">{{ filter_name }}</div>
+                    <div id="{{ filter }}_include" class="subbox">
+                        <div class="filtertitle">
+                            <span>Include Only:</span>
+                            <span class="spanright"> 
+                                <input type="file" id="{{ filter }}_includes" name="{{ filter }}_includes" accept=".txt"/>
+                                <label for="{{ filter }}_includes">
+                                    <img class="imgbutton"  title="upload filters from file" src={{ url_for('.static', filename='images/if_upload.png') }}/>
+                                </label>
+                                <input type="image" title="remove all filters" src={{ url_for('.static', filename='images/if_remove.png') }} id="erase_{{ filter }}includes" name="erase_{{ filter }}includes" class="imgbutton" />
+                            </span>
+                        </div>
+                        <div id="show_{{ filter }}includes" class="filterbox"></div>
+                    </div>
+                    <div id="{{ filter }}s_exclude" class="subbox">
+                        <div class="filtertitle">
+                            <span>Exclude:</span>
+                            <span class="spanright"> 
+                                <input type="file" id="{{ filter }}_excludes" name="{{ filter }}_excludes" accept=".txt"/>
+                                <label for="{{ filter }}_excludes">
+                                    <img class="imgbutton" title="upload filters from file" src={{ url_for('.static', filename='images/if_upload.png') }}/>
+                                </label>
+                                <input type="image" title="remove all filters" src={{ url_for('.static', filename='images/if_remove.png') }} id="erase_{{ filter }}excludes" name="erase_{{ filter }}excludes" class="imgbutton" />
+                            </span>
+                        </div>
+                        <div id="show_{{ filter }}excludes" class="filterbox"></div>
+                    </div>
+               </div>

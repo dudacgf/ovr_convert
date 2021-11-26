@@ -1,0 +1,64 @@
+    <div class="col-12 justify-content-center bg-success m-2 mr-5 text-white">&nbsp;Options
+    <!--  vulnerability minimum level selection -->
+    <div class="row">
+        <div class="col-sm-5">&nbsp;Level:
+            <div class="row">
+                <div id="level_flag" class="pl-3">
+                  <div class="form-check form-check-inline">
+                    <input type="radio" class="flags-radio" id="level_critical" name="level" value="critical">
+                    <label for="level_critical">critical</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input type="radio" class="flags-radio" id="level_high" name="level" value="high">
+                    <label for="level_high">high</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input type="radio" class="flags-radio" id="level_medium" name="level" value="medium">
+                    <label for="level_medium">medium</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input type="radio" class="flags-radio" id="level_low" name="level" value="low">
+                    <label for="level_low">low</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input type="radio" class="flags-radio" id="level_none" name="level" value="none" checked="checked">
+                    <label for="level_none">none</label>
+                  </div>
+                </div>
+            </div>
+        </div>
+    <!-- report format (xlsx, docx, csv) selection -->
+        <div class="col-sm-3">&nbsp;Format:
+            <div class="row">
+                <div id="format_flag" class="pl-3">
+                  <div class="form-check form-check-inline">
+                    <input type="radio" class="flags-radio" id="format_xlsx" name="format" value="xlsx" checked="checked">
+                    <label for="format_xlsx">xlsx</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input type="radio" class="flags-radio" id="format_docx" name="format" value="docx">
+                    <label for="format_docx">docx</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input type="radio" class="flags-radio" id="format_csv" name="format" value="csv">
+                    <label for="format_csv">csv</label>
+                  </div>
+                </div>
+            </div>
+        </div>
+    <!-- report type (by host and its vulnerabilities or by vulnerability and its hosts) selection -->
+        <div class="col-sm-3">&nbsp;Report by:
+            <div class="row">
+                <div id="reporttype_flag" class="pl-3">
+                  <div class="form-check form-check-inline">
+                    <input type="radio" class="flags-radio" id="reporttype_vulnerability" name="reporttype" value="vulnerability" checked="checked">
+                    <label for="reporttype_vulnerability">vulnerability</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input type="radio" class="flags-radio" id="reporttype_host" name="reporttype" value="host">
+                    <label for="reporttype_host">host</label>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div></div>

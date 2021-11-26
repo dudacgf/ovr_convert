@@ -1,0 +1,17 @@
+{% from 'bootstrap/utils.html' import render_icon %}
+{% extends "base.html" %}
+{% block head %}
+  {{ super() }}
+  <style type="text/css">
+  .dropdown-toggle::after { border: none!important; width: 0px;}
+  </style>
+
+{% endblock %}
+
+{% block content %}
+<!-- top navbar -->
+{% include 'navbar.html' %}
+
+<!-- options (format, level, reporttype) -->
+{% include 'flags.html' %}
+{% endblock %}

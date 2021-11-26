@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        {% block head %}
+        <title>{% block title %}OpenVAS XML Report Converter{% endblock %}</title>
+        <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        {% block styles %}
+            <!-- Bootstrap CSS -->
+            {{ bootstrap.load_css() }}
+            <link rel="stylesheet" href="{{ url_for('.static', filename='css/styles.css') }}" />
+
+        {% endblock %}
+
+        {% block scripts %}
+            <!-- Optional JavaScript -->
+            {{ bootstrap.load_js() }}
+            {% include "javascript.html" %}
+            <script type="text/javascript">
+                const WAITING_IMAGE_URL = '{{ url_for('.static', filename='images/i8_waiting.gif') }}'
+                const IMAGES_URL_BASE = '{{ url_for('.static', filename='images') }}';		
+            </script>
+	        <script type="text/javascript" src={{ url_for('.static', filename='js/scripts.js') }}></script>
+        {% endblock %}
+
+        {% endblock %}
+    </head>
+    <body>
+        <!-- early load images -->
+        <div style="display:none;"><img src="{{ url_for('.static', filename='images/waiting.gif') }}"></div>
+        <!-- Your page content -->
+        {% block content %}        {% endblock %}
+        
+        <div id="footer">
+            {% block footer %}
+            <div class="fixed-bottom bg-dark text-white text-bold" style="font-size: 0.7rem">
+            &copy; Copyright 2021 by <a href="http://twitter.com/dudacgf" class="text-white bg-dark">dudacgf</a>.
+            </div>
+            {% endblock %}
+        </div>
+        
+    </body>
+</html>

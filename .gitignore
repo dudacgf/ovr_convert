@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# flask_session, flask instance
+flask_session/
+instance/

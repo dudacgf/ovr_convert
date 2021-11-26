@@ -1,0 +1,70 @@
+<script type="text/javascript">
+
+$(document).ready(function (e) {
+
+/* events for uploading and erasing input xml reports from openvas */    
+    $('#inputfiles').on('change', function() {
+        upload_files('/api/xml_reports', 'inputfiles', 'show_inputfiles');
+    });
+    $('#erase_inputfiles').on('click', function() {
+        $.ajax({
+            url: '/api/erase_xml_reports',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: false,
+            type: 'post',
+        });
+        $('#show_inputfiles').html('<span class="erasedbox">Uploaded xml reports erased</span>');
+        setTimeout(function() { 
+            $('#show_inputfiles').html('');
+        }, 3000);
+        return;
+    });
+
+/* events for uploading and erasing filters */
+{% for filter in ('networks', 'regex', 'cve') %}
+    $('#erase_{{ filter }}includes').on('click', function() {
+        erase_filter('/api/erase_{{ filter }}_includes', '{{ filter }}_includes', 'show_{{ filter }}includes', 
+                     '<span class="erasedbox">All filters erased</span>');
+    });
+    $('#erase_{{ filter }}excludes').on('click', function() {
+        erase_filter('/api/erase_{{ filter }}_excludes', '{{ filter }}_excludes', 'show_{{ filter }}excludes', 
+                     '<span class="erasedbox">All filters erased</span>');
+    });
+
+    $('#{{filter }}_includes').on('change', function() {
+        upload_files('/api/{{ filter }}_includes', '{{ filter }}_includes', 'show_{{ filter }}includes');
+    });
+
+    $('#{{ filter }}_excludes').on('change', function() {
+        upload_files('/api/{{ filter }}_excludes', '{{ filter }}_excludes', 'show_{{ filter }}excludes');
+    });
+{% endfor %}
+
+/* events to save the flags when changed */
+{% for flag in ('level', 'reporttype', 'format') %}
+/*    $('#{{ flag }}_flag').on('click', function() { */
+    $('input:radio[name={{ flag }}]').on('click', function() {
+        set_flag('/api/set_{{ flag }}_flag', '{{ flag }}');
+    });
+{% endfor %}
+
+/* events to load, save and clear the configuration */
+    $('#load_configuration').on('change', function() {
+        upload_configuration('/api/upload_configuration', 'load_configuration', 'msgbox');
+    });
+
+    $('#clear_configuration').on('click', function() {
+        clear_configuration('/api/clear_configuration');
+    });
+
+/* event to generate a report and download it to user */
+   $('#generate_report').on('click', function() {
+       generate_report('msgbox');
+   });
+    
+});
+
+
+</script>

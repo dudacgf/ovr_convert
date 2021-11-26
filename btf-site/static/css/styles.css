@@ -1,0 +1,273 @@
+/* font faces from google */
+@font-face {
+    font-family: 'Merriweather Sans';
+    font-style: normal;
+    font-weight: 400;
+src: url(https://fonts.gstatic.com/s/merriweathersans/v14/2-cO9IRs1JiJN1FRAMjTN5zd9vgsFF_5asQTb6hZ2JKZou4ViesH.woff2) format('woff2');
+     unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* main body */
+body {
+overflow: hidden; text-align: left; vertical-align: bottom; text-decoration: none;
+margin: 0pt; padding: 0pt; border: 0pt none;
+font-family: 'Merriweather Sans', helvetica, Sans-serif; 
+}
+
+/* outmost container */
+.container {
+width: 100vw;
+height: 100vh;
+padding: 0;
+}
+
+hr {
+padding: 0;
+margin: 0;
+width: 100%;
+}
+
+/* headers of tables */
+.header {
+padding: 2px;
+margin: 1%;
+width: auto;
+height: auto;
+min-height: 10%;
+max-height: 20%;
+border: 2px black solid;
+}
+
+.navbox {
+width: 100hw;
+height: 20px;
+background-color: #66c430;
+font-size: 14px;
+font-weight: bold;
+padding: 2px;
+border-bottom: 2px solid black;
+}
+.navbox:first-child {
+font-size: 16px;
+}
+
+/* menus */
+.menuoption {
+width: 33.33%;
+height: 20px;
+margin: 0;
+text-align: center;
+background-color: transparent;
+float: left;
+}
+.menuoption:hover {
+background-color: #224110;
+color: white;
+cursor: pointer;
+}
+
+/* Flag region */
+.flags-radio {
+opacity: 0;
+position: fixed;
+width: 0;
+}
+.flags-radio + label {
+display: inline-block;
+background-color: #66c430;
+padding: 3px 2px;
+font-size: 12px;
+border: 1px solid #444;
+border-radius: 2px;
+margin: 2px;
+width: 80px;
+}
+.flags-radio:checked + label {
+background-color:#224110;
+color: white;
+border-color: #444;
+}
+.flags-radio + label:hover {
+background-color:#224110;
+color: white;
+}
+
+.flagtitle {
+margin: 0;
+background-color: #66c430;
+width: 20%;
+height: auto;
+padding: 6px 10px 6px 4px;
+font-size: 12px;
+font-weight: bold;
+float: left;
+clear: left;
+text-align: right;
+}
+
+/* filter region */
+.box {
+padding: 2px;
+margin: 1%;
+clear: both;
+float: none;
+height: 45vh;
+display: block;
+border: 2px solid black;
+}
+
+.boxleft {
+width: 33.33%;
+height: 83%;
+margin: 0;
+float: left;
+display: block;
+}
+
+.subbox {
+width: 50%;
+margin: 0;
+border-right: none;
+float: left;
+height: 90%;
+}
+
+.filterbox {
+width: 100%;
+height: 95%;
+clear: both;
+float: left;
+margin: 0;
+padding: 0;
+display: block;
+overflow-y: auto;
+overflow-x: hidden;
+white-space: nowrap;
+scrollbar-width: thin;
+}
+
+.filtertitle {
+margin: 0;
+background-color: #66c430;
+width: auto;
+height: auto;
+padding: 4px;
+font-size: 12px;
+font-weight: bold;
+}
+
+/* xml_reports region  */
+.xml_reports_box {
+color: lightgray;
+font-size: 10px;
+display: grid;
+}
+.xml_reports_box:empty {
+background-color: black;
+}
+
+/* generate report button region */
+.generatecontainer { 
+  height: 50px;
+  position: relative;
+  border: 0; 
+}
+
+.generatebox {
+position: absolute; 
+top: 50%; 
+left: 50%; 
+-ms-transform: translate(-50%, -50%); 
+transform: translate(-50%, -50%); 
+width: 50px; 
+height: 50px;
+padding: 0; 
+padding-top: 6px;
+margin: 3px;
+justify-content: center;
+text-align: center;
+background-color: transparent;
+border: 3px solid #224110;
+border-radius: 50%;
+}
+.generatebox:hover {
+background-color: #66c430;
+}
+
+.generateimgbutton {
+width: 40px;
+height: 40px;
+cursor: pointer;
+vertical-align: bottom;
+}
+
+/* bottom bar */
+.bottombar {
+background-color: #66c430;
+overflow: hidden;
+position: fixed;
+bottom: 0;
+width: 100%;
+height: 20px;
+border-top: 2px solid black;
+}
+
+/* miscellaneous classes used all around */
+input[type='file'] {
+color: transparent;
+width: 20px;
+display: none;
+font-size: 16px;
+font-weight: bold;
+}
+
+.imgbutton {
+width: 16px;
+height: 16px;
+cursor: pointer;
+}
+
+.imgbox {
+text-align: center; 
+vertical-align: middle;
+}
+
+.imgwaiting {
+width: 48px;
+height: 48px;
+}
+
+.erasedbox {
+color: red;
+font-size: 10px;
+}
+
+.linebox {
+color: darkgray;
+font-size: 10px;
+clear: left;
+float: left;
+border-bottom: 0.5px dotted black;
+display: block;
+width: 98%;
+height: 14px;
+padding: 1px;
+margin: 0px;
+text-overflow: auto;
+}
+
+fieldset {
+overflow: hidden;
+margin: 0;
+padding: 0;
+border: 0;
+}
+
+.spanright {
+float: right;
+}
+
+.spancenter {
+text-align: center;
+}
+

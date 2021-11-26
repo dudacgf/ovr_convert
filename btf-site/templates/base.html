@@ -7,7 +7,7 @@
 
         <!-- Required meta tags -->
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width">
 
         {% block styles %}
             <!-- Bootstrap CSS -->
@@ -30,6 +30,7 @@
         {% endblock %}
     </head>
     <body>
+      <div class="container-fluid">
         <!-- early load images -->
         <div style="display:none;"><img src="{{ url_for('.static', filename='images/waiting.gif') }}"></div>
         <!-- Your page content -->
@@ -42,6 +43,6 @@
             </div>
             {% endblock %}
         </div>
-        
+      </div>  
     </body>
 </html>

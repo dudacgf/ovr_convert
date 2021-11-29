@@ -1,28 +1,32 @@
 {% from 'bootstrap/utils.html' import render_icon %}
-<nav class="navbar navbar-expand-sm font-weight-bold navbar-primary bg-primary">
-  <span class="navbar-brand mb0 text-white">
-      <img src=" {{ url_for(".static", filename="images/rex-white.png") }}" width="30" height="30" }} class="d-inline-block align-top" alt="t.rex head" />
-      OpenVAS XML Report Converter
-  </span>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+<div class="row">
+    <div class="col p-0">
+      <nav class="navbar navbar-expand-sm navbar-default navbar-primary bg-primary">
+      <div class="navbar-brand mb0 text-light">
+          <img src=" {{ url_for(".static", filename="images/rex-white.png") }}" width="30" height="30" }} class="d-inline-block align-top" alt="t.rex head" />
+          OpenVAS XML Report Converter
+      </div>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav ml-auto">
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle text-white" href="" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="upload a .yml file with the configuration">
-          Configuration {{ render_icon('three-dots-vertical') }}
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#" onclick='document.getElementById("load_configuration").click();'>
-            <div style="display: none;"><input type="file" id="load_configuration" multiple accept=".yml,.yaml"/></div>{{ render_icon('cloud-arrow-up-fill') }} Upload
-          </a>
-          <a class="dropdown-item" href="/api/save_configuration">{{ render_icon('cloud-arrow-down-fill') }} Save</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#" id="clear_configuration">{{ render_icon('x', '1em', 'red') }} Clear</a>
-        </div>
-      </li>
-    </ul>
-  </div>
-</nav>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-light" href="" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="upload a .yml file with the configuration">
+              Configuration {{ render_icon('three-dots-vertical') }}
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="#" onclick='document.getElementById("load_configuration").click();'>
+                <div style="display: none;"><input type="file" id="load_configuration" multiple accept=".yml,.yaml"/></div>{{ render_icon('cloud-arrow-up-fill', '0.8rem') }}&nbsp;Upload
+              </a>
+              <a class="dropdown-item" href="/api/save_configuration">{{ render_icon('cloud-arrow-down-fill', '0.8rem') }}&nbsp;Save</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="" id="clear_configuration">{{ render_icon('x-circle-fill', '0.8rem', 'red') }}&nbsp;Clear</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    </div>
+</div>

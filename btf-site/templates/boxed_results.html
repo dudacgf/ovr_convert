@@ -1,7 +1,10 @@
-
-<div class="boxed">
+{% from 'bootstrap/table.html' import render_table %}
+{% if show_table %}
+    {{ render_table(lines, table_classes='col-auto p-0 m-0 table table-sm table-responsive table-striped ', header_classes="thead-dark", titles=titles, primary_key=primary_key, responsive=True) }}
+{% else %}
+<div class="col">
 {%- for line in lines %}
 <div class="linebox">{{ line }}</div>
 {%- endfor %}
 </div>
-
+{% endif %}

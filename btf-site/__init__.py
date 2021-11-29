@@ -13,7 +13,7 @@ def create_app():
       MAX_CONTENT_LENGTH = 200*1024*1024, # to generate very big reports. ymmv 
       SESSION_PERMANENT = False,
       SESSION_TYPE = 'filesystem',
-      BOOTSTRAP_BOOTSWATCH_THEME = 'cyborg',
+      BOOTSTRAP_BOOTSWATCH_THEME = 'cosmo',
       BOOTSTRAP_BTN_SIZE = 'sm',
     )
 
@@ -28,7 +28,13 @@ def create_app():
 
     # create Bootstrap
     bootstrap = Bootstrap(app)
-    
+
+    # create instance dirs if any
+    try:
+        os.makedirs(app.instance_path)
+    except OSError:
+        pass
+        
     @app.route('/')
     def btf():
         new_session_configuration()

@@ -131,3 +131,6 @@ dmypy.json
 # flask_session, flask instance
 flask_session/
 instance/
+
+# wing project files
+*.wpr

@@ -1,0 +1,38 @@
+{% from 'bootstrap/utils.html' import render_icon %}
+<!-- Network, Regex and CVE Filters Box -->
+<div class="row">
+    <div class="col-md m-2 p2 bg-secondary rounded text-light">
+        Filters
+        <div class="row">
+            {%- for filter_name in ['Networks', 'Regex', 'CVE'] %}
+            <div class="col-md m-0">
+                <div class="mt-2 bg-white text-secondary text-center">
+                    &nbsp;{{ filter_name }}
+                </div>
+                {% set filter = filter_name.lower() %}
+                <div class="row">
+                    {% for title in ['include', 'exclude'] %}
+                    <div id="{{ filter }}_{{ title }}" class="col p-1 bg-secondary text-light" >
+                        <div id="{{ filter }}_{title}" class="col mh-100 " style="height: 200px; font-size: .7rem;">
+                            <div class="row">
+                                <div class="col-sm-9 flex-fill ml-2 p-0" style="cursor: pointer;" onclick="document.getElementById('{{ filter }}_{{ title }}s').click();">
+                                    <div style="display: none;"><input type="file" id="{{ filter }}_{{ title }}s" name="{{ filter }}_{{ title }}s" accept=".txt"/></div>
+                                    <label for="{{ filter }}_{{ title }}s" style="cursor: pointer">{{ render_icon('cloud-arrow-up-fill') }}</label>
+                                    <span>&nbsp;{{ title.capitalize() }}:</span>
+                                </div>
+                                <div class="col-sm-2 p-0 text-sm-right">
+                                    <input type="image" class="icon-white" title="remove all filters" src={{ url_for('.static', filename='images/x-circle-fill.svg') }} id="erase_{{ filter }}{{ title }}s" name="erase_{{ filter }}{{ title }}s"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div id="show_{{ filter }}{{ title }}s" class="col d-sm-box mh-100 p-2 bg-white border-2 border-success" style="max-height: 170px; overflow-y: auto; height: 170px; font-size: 0.7rem; "></div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>

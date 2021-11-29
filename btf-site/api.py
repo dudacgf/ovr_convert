@@ -13,6 +13,18 @@ from flask_session import Session
 
 api_bp = Blueprint('api', __name__, url_prefix='/api')
 
+def size_format(b):
+    if b < 1000:
+              return '%i' % b + 'B'
+    elif 1000 <= b < 1000000:
+        return '%.1f' % float(b/1000) + 'KB'
+    elif 1000000 <= b < 1000000000:
+        return '%.1f' % float(b/1000000) + 'MB'
+    elif 1000000000 <= b < 1000000000000:
+        return '%.1f' % float(b/1000000000) + 'GB'
+    elif 1000000000000 <= b:
+        return '%.1f' % float(b/1000000000000) + 'TB'
+
 #
 # route to upload xml reports
 @api_bp.route('/xml_reports', methods=['POST'])
@@ -25,18 +37,24 @@ def upload_xml_reports():
     
     # now save all files        
     lines = []
+    dataTable = []
 
     files = request.files.getlist('files[]')
+    i = 1
     for file in files:
         if file:
             filename = secure_filename(file.filename)
-            file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
-            lines.append(file.filename)
+            secure_name = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+            file.save(secure_name)
+            lines.append(filename)
+            filesize = os.path.getsize(secure_name)
+            dataTable.append({'id': i, 'filename': secure_filename(file.filename), 'size': size_format(filesize)})
+            i = i + 1
             
     session['xml_reports'] = lines
-    print(session['xml_reports'])
     
-    return render_template('boxed_results.html', lines=lines)   
+    #return render_template('boxed_results.html', lines=lines)   
+    return render_template('boxed_results.html', lines=dataTable, show_table=True, titles=[('id', '#'), ('filename', 'File'), ('size', 'size')], primary_key='id') 
 
 #
 # route to erase all xml reports previously uploaded
@@ -74,10 +92,6 @@ def upload_filter_file():
      
     filter_list = []
     
-    for line in memfile.splitlines():
-        if line != '':
-            filter_list.append(line)
-    
     filter_name = request.form.get('input_field_name', None)
     if not filter_name is None:
         [filter_class, filter_option] = filter_name.split('_')
@@ -85,9 +99,20 @@ def upload_filter_file():
         if not filter_class in session['config']:
             session['config'][filter_class] = dict()
             
+
+        i = 1
+        dataTable = []
+        for line in memfile.splitlines():
+            if line != '':
+                filter_list.append(line)
+                dataTable.append({'id': i, filter_name: line})
+                i = i + 1
+    
         session['config'][filter_class][filter_option] = filter_list
 
-    return render_template('boxed_results.html', lines=filter_list)   
+    return render_template('boxed_results.html', lines=filter_list)
+    #return render_template('boxed_results.html', lines=dataTable, show_table=True, titles=[('id', '#'), (filter_name, f'{filter_option}')], primary_key='id') 
+
 
 #
 # route to erase filters previously uploaded
@@ -267,3 +292,27 @@ def generate_report():
     os.remove(config_file_path)
         
     return send_file(report_file_path, as_attachment=True, download_name='openvas_report.' + session['config']['format'])
+
+# just to have fun
+@api_bp.route('/next_theme', methods=['POST'])
+def next_theme():
+    
+    #print(f"current theme: {current_app.config['BOOTSTRAP_BOOTSWATCH_THEME']}")
+    
+    themes = ['cosmo', 'cyborg', 'darkly', 'flatly', 'journal', 'litera', 
+              'pulse', 'sandstone', 'slate', 'solar', 'spacelab', 'superhero', 'united']
+    
+    current_theme = current_app.config['BOOTSTRAP_BOOTSWATCH_THEME']
+    current_theme_index = themes.index(current_theme)
+    
+    if current_theme_index+1 == len(themes):
+        current_app.config['BOOTSTRAP_BOOTSWATCH_THEME'] = themes[0]
+    else:
+        current_app.config['BOOTSTRAP_BOOTSWATCH_THEME'] = themes[current_theme_index+1]
+
+    # resets configuration - document will be reloaded at return to show new theme
+    new_session_configuration()
+    
+    #print(f"new theme: {current_app.config['BOOTSTRAP_BOOTSWATCH_THEME']}")
+
+    return '200'

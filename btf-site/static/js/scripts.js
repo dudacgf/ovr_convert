@@ -102,7 +102,7 @@ function set_flag(server_url, input_name) {
         type: 'post',
         success: function() {
             if (input_name.match(/format/)) {
-              var imgsrc = src='' + IMAGES_URL_BASE + '/if_format_' + value + '.png' ;
+              var imgsrc = src='' + IMAGES_URL_BASE + '/format-' + value + '.svg' ;
               $('#generate_report').attr('src', imgsrc);
             }
         }
@@ -190,6 +190,18 @@ function upload_configuration (server_url, input_id, msg_id) {
                 return;
 };
 
+/* function to reset configuration fields */
+function reset_configuration() {
+    document.getElementById('level_none').checked = true;
+    document.getElementById('reporttype_vulnerability').checked = true;
+    document.getElementById('format_xlsx').checked = true;
+    $('#show_networksincludes').html('');
+    $('#show_networksexcludes').html('');
+    $('#show_regexincludes').html('');
+    $('#show_regexexcludes').html('');
+    $('#show_cveincludes').html('');
+    $('#show_cveexcludes').html('');
+}
 
 /* function to clear the configuration
  * receives:
@@ -205,15 +217,7 @@ function clear_configuration (server_url) {
         data: '',
         type: 'post',
         success: function (response) {
-            document.getElementById('level_none').checked = true;
-            document.getElementById('reporttype_vulnerability').checked = true;
-            document.getElementById('format_xlsx').checked = true;
-            $('#show_networksincludes').html('');
-            $('#show_networksexcludes').html('');
-            $('#show_regexincludes').html('');
-            $('#show_regexexcludes').html('');
-            $('#show_cveincludes').html('');
-            $('#show_cveexcludes').html('');
+           reset_configuration();
         },
         error: function (response) {
             $('#msgbox').html(response)
@@ -273,9 +277,26 @@ function generate_report(msg_id) {
         complete: function() {
             var selector = 'input[type="radio"][name="format"]:checked'
             var value = document.querySelector(selector).value
-            var imgsrc = src='' + IMAGES_URL_BASE + '/if_format_' + value + '.png' ;
+            var imgsrc = src='' + IMAGES_URL_BASE + '/format-' + value + '.svg' ;
             $('#generate_report').attr('src', imgsrc) ;
         }
     });
 
+}
+
+function other_theme() {
+    $.ajax({
+        url: '/api/next_theme',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: '',
+        type: 'post',
+        success: function (response) {
+            window.location.reload( false );
+            reset_configuration();
+        },
+    });
+
+    return;
 }

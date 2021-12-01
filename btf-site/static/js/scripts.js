@@ -1,58 +1,4 @@
-/* function to upload one or more files. 
- * receives 
- *    the server_url to be used
- *    the id of the input field
-*/
-function upload_files (server_url, input_id) {
-                var form_data = new FormData();
-                var input_file_field = document.getElementById(input_id)
-                var ins = input_file_field.files.length;
-
-                var show_input_id = '#show_' + input_id; 
-                var load_input_id = '#load_' + input_id;
-                $(show_input_id).css('display', 'block');
-                $(load_input_id).css('display', 'none');
-
-                /* ==> const WAITING_IMAGE_URL must be set before including this script. */
-                $(show_input_id).html('<div class="imgbox"><img class="imgwaiting" src="' + WAITING_IMAGE_URL + '"></div>'); 
-
-                if (ins == 0) {
-                    $(show_input_id).html('<span style="color:red">Select at least one file</span>');
-                    return;
-                }
-
-                for (var x = 0; x < ins ; x++) {
-                    var filename = input_file_field.files[x].name;
-                    if (input_file_field.accept != '') {
-                       var filetype = filename.split('.')[filename.split('.').length-1];
-                       if (input_file_field.accept.indexOf(filetype) < 0) {
-                         $(show_input_id).html('<span style="color:red">File Extension not accepted [' + filetype + '] in [' + filename + '].</span>');
-                         return ;
-                       }
-                    }
-                    form_data.append('files[]', input_file_field.files[x]);
-                }
-                
-                form_data.append('input_field_name', input_id);
-
-                $.ajax({
-                    url: server_url,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    data: form_data,
-                    type: 'post',
-                    success: function (response) {
-                        $(show_input_id).html(response);
-                    },
-                    error: function (response) {
-                        $(show_input_id).html(response);
-                    }
-                });
-
-                return;
-};
-
+/* shows request response at #show_{input_div} */
 function show_response (input_id, response) {
     var show_input_id = '#show_' + input_id; 
     var load_input_id = '#load_' + input_id;
@@ -66,6 +12,7 @@ function show_response (input_id, response) {
     return;
 };
 
+/* shows a waiting gif at #show_{input_div} */
 function show_waiting(input_id) {
     var show_input_id = '#show_' + input_id; 
     var load_input_id = '#load_' + input_id;

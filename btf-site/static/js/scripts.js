@@ -2,23 +2,35 @@
  * receives 
  *    the server_url to be used
  *    the id of the input field
- *    the id of the field where results will be posted
 */
-function upload_files (server_url, input_id, msg_id) {
+function upload_files (server_url, input_id) {
                 var form_data = new FormData();
-                var ins = document.getElementById(input_id).files.length;
+                var input_file_field = document.getElementById(input_id)
+                var ins = input_file_field.files.length;
 
-                msg_id = '#' + msg_id;
+                var show_input_id = '#show_' + input_id; 
+                var load_input_id = '#load_' + input_id;
+                $(show_input_id).css('display', 'block');
+                $(load_input_id).css('display', 'none');
+
                 /* ==> const WAITING_IMAGE_URL must be set before including this script. */
-                $(msg_id).html('<div class="imgbox"><img class="imgwaiting" src="' + WAITING_IMAGE_URL + '"></div>');
+                $(show_input_id).html('<div class="imgbox"><img class="imgwaiting" src="' + WAITING_IMAGE_URL + '"></div>'); 
 
                 if (ins == 0) {
-                    $(msg_id).html('<span style="color:red">Select at least one file</span>');
+                    $(show_input_id).html('<span style="color:red">Select at least one file</span>');
                     return;
                 }
 
                 for (var x = 0; x < ins ; x++) {
-                    form_data.append('files[]', document.getElementById(input_id).files[x]);
+                    var filename = input_file_field.files[x].name;
+                    if (input_file_field.accept != '') {
+                       var filetype = filename.split('.')[filename.split('.').length-1];
+                       if (input_file_field.accept.indexOf(filetype) < 0) {
+                         $(show_input_id).html('<span style="color:red">File Extension not accepted [' + filetype + '] in [' + filename + '].</span>');
+                         return ;
+                       }
+                    }
+                    form_data.append('files[]', input_file_field.files[x]);
                 }
                 
                 form_data.append('input_field_name', input_id);
@@ -31,53 +43,87 @@ function upload_files (server_url, input_id, msg_id) {
                     data: form_data,
                     type: 'post',
                     success: function (response) {
-                        $(msg_id).html(response);
+                        $(show_input_id).html(response);
                     },
                     error: function (response) {
-                        $(msg_id).html(response)
+                        $(show_input_id).html(response);
                     }
                 });
 
                 return;
 };
 
+function show_response (input_id, response) {
+                var show_input_id = '#show_' + input_id; 
+                var load_input_id = '#load_' + input_id;
+                $(show_input_id).css('display', 'block');
+                $(load_input_id).css('display', 'none');
+
+                $(show_input_id).html(response);
+                
+                //$('#' + input_id).reset();
+
+                return;
+};
+
+/* function to erase uploaded xml reports */
+function erase_uploaded_files (server_url, input_id) {
+    var show_input_id = '#show_' + input_id; 
+    var load_input_id = '#load_' + input_id;
+
+    $.ajax({
+        url: '/api/erase_xml_reports',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: false,
+        type: 'post',
+    });
+    
+    $(show_input_id).html('<span class="erasedbox">Uploaded xml reports erased</span>');
+    setTimeout(function() { 
+        $(show_input_id).html('');
+        $(show_input_id).css('display', 'none');
+        $(load_input_id).css('display', 'block');
+    }, 3000);
+    return;
+};
+
 /* function to erase filters uploaded 
  * receives:
  *    the server_url to be used
  *    the id of the input field used to upload filters 
- *    the id of the field where results will be posted
- *    the message that will be posted 
 */
-function erase_filter(server_url, input_id, msg_id, message_to_post) {
-                var form_data = new FormData();
+function erase_filter(server_url, input_id) {
+    var form_data = new FormData();
 
-                msg_id = '#' + msg_id;
+    show_input_id = '#show_' + input_id;
+    load_input_id = '#load_' + input_id;
+    
+    form_data.append('input_field_name', input_id);
 
-                /* ==> const WAITING_IMAGE_URL must be set before including this script. */
-                $(msg_id).html('<div class="imgbox"><img class="imgwaiting" src="' + WAITING_IMAGE_URL + '"></div>');
+    $.ajax({
+        url: server_url,
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function (response) {
+            $(show_input_id).html('<span style="color: red;">all filters erased</span>')
+        },
+        error: function (response) {
+            $(show_input_id).html(response.message)
+        }
+    });
 
-                form_data.append('input_field_name', input_id);
+    setTimeout(function() { 
+        $(show_input_id).html('');
+        $(show_input_id).css('display', 'none');
+        $(load_input_id).css('display', 'block');
+    }, 3000);
 
-                $.ajax({
-                    url: server_url,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    data: form_data,
-                    type: 'post',
-                    success: function (response) {
-                        $(msg_id).html(message_to_post)
-                    },
-                    error: function (response) {
-                        $(msg_id).html(response.message)
-                    }
-                });
-
-                setTimeout(function() { 
-                    $(msg_id).html('');
-                }, 3000);
-
-                return;
+    return;
 }
 
 /* function to set config flags

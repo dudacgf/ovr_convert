@@ -17,6 +17,9 @@ $(document).ready(function (e) {
             this.on('complete', function() {
                 this.removeAllFiles();
             });
+            this.on('sending', function () {
+                show_waiting('inputfiles');
+            });
         }
     };
     $('#inputfiles').dropzone();

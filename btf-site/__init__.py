@@ -1,9 +1,12 @@
 import os
+
 from flask import Flask, render_template, session
 from flask_session import Session
 from flask_bootstrap import Bootstrap
+
 from . import api
 from .api import new_session_configuration
+
 
 def create_app():
     app = Flask(__name__)
@@ -35,6 +38,12 @@ def create_app():
     except OSError:
         pass
         
+    @app.template_filter('lowerCamelCase')
+    def lowerCamelCase(s):
+        words = s.translate(str.maketrans({'_': ' ', '-': ' ', '#': ' '})).split(' ')
+        s = "".join(word[0].upper() + word[1:].lower() for word in words)
+        return s[0].lower() + s[1:]
+    
     @app.route('/')
     def btf():
         new_session_configuration()

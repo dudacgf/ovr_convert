@@ -29,9 +29,6 @@ def size_format(b):
 # route to upload xml reports
 @api_bp.route('/xml_reports', methods=['POST'])
 def upload_xml_reports():
-    if 'files[]' not in request.files:
-        return 'No file uploaded. try again.'
-    
     # if any file where uploaded before, remove
     erase_xml_reports()
     
@@ -39,22 +36,26 @@ def upload_xml_reports():
     lines = []
     dataTable = []
 
-    files = request.files.getlist('files[]')
+    files = request.files;
     i = 1
-    for file in files:
+    for item in files:
+        file = files.get(item)
         if file:
             filename = secure_filename(file.filename)
             secure_name = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
             file.save(secure_name)
             lines.append(filename)
             filesize = os.path.getsize(secure_name)
-            dataTable.append({'id': i, 'filename': secure_filename(file.filename), 'size': size_format(filesize)})
+            filetype = file.content_type.split('/')[1]
+            dataTable.append({'id': i, 'filename': secure_filename(file.filename), 'type': filetype, 'size': size_format(filesize)})
             i = i + 1
             
     session['xml_reports'] = lines
     
     #return render_template('boxed_results.html', lines=lines)   
-    return render_template('boxed_results.html', lines=dataTable, show_table=True, titles=[('id', '#'), ('filename', 'File'), ('size', 'size')], primary_key='id') 
+    return render_template('boxed_results.html', lines=dataTable, 
+                           show_table=True, titles=[('id', '#'), ('filename', 'File'), ('type', 'type'), ('size', 'size')], primary_key='id') 
+
 
 #
 # route to erase all xml reports previously uploaded
@@ -83,22 +84,20 @@ def erase_xml_reports():
 @api_bp.route('/cve_includes', methods=['POST'])
 @api_bp.route('/cve_excludes', methods=['POST'])
 def upload_filter_file():
-    if 'files[]' not in request.files:
-        return '<span class="erasedbox">não recebi nada</span>'
-
-    files = request.files.getlist('files[]')
-    fp = FileStorage(files[0])
+    print(request)
+    file = request.files['file[0]']
+    print(f"file: {file}")
+    fp = FileStorage(file)
     memfile = fp.stream.read().decode('UTF-8')
+    print(memfile)
      
     filter_list = []
     
-    filter_name = request.form.get('input_field_name', None)
+    filter_name = request.args.get('input_field_name', None)
     if not filter_name is None:
         [filter_class, filter_option] = filter_name.split('_')
-
         if not filter_class in session['config']:
             session['config'][filter_class] = dict()
-            
 
         i = 1
         dataTable = []
@@ -110,8 +109,8 @@ def upload_filter_file():
     
         session['config'][filter_class][filter_option] = filter_list
 
-    return render_template('boxed_results.html', lines=filter_list)
-    #return render_template('boxed_results.html', lines=dataTable, show_table=True, titles=[('id', '#'), (filter_name, f'{filter_option}')], primary_key='id') 
+    #return render_template('boxed_results.html', lines=filter_list)
+    return render_template('boxed_results.html', lines=dataTable, show_table=True, titles=[('id', '#'), (filter_name, f'{filter_option}')], primary_key='id') 
 
 
 #

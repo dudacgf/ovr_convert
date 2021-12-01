@@ -13,15 +13,26 @@
         {% block styles %}
             <!-- Bootstrap CSS -->
             {{ bootstrap.load_css() }}
+			<link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
             <link rel="stylesheet" href="{{ url_for('.static', filename='css/styles.css') }}" />
-
+            <style type="text/css">
+                .dropzone {
+					height: 100%;
+					min-height: 0px !important;
+				}
+			</style>
         {% endblock %}
 
         {% block scripts %}
             <!-- Optional JavaScript -->
             {{ bootstrap.load_js() }}
+			<script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+
             {% include "javascript.html" %}
             <script type="text/javascript">
+   	    	    /* disable autodiscover globally */
+   	    	    Dropzone.autoDiscover = false;
+
                 const WAITING_IMAGE_URL = '{{ url_for('.static', filename='images/i8_waiting.gif') }}'
                 const IMAGES_URL_BASE = '{{ url_for('.static', filename='images') }}';		
             </script>
@@ -31,7 +42,7 @@
         {% endblock %}
     </head>
     <body>
-      <div class="container-fluid">
+      <div class="container-fluid" ondragstart="return false;" ondrop="return false;">
         <!-- early load images -->
         <div style="display:none;"><img src="{{ url_for('.static', filename='images/waiting.gif') }}"></div>
         <!-- Your page content -->

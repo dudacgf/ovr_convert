@@ -54,16 +54,28 @@ function upload_files (server_url, input_id) {
 };
 
 function show_response (input_id, response) {
-                var show_input_id = '#show_' + input_id; 
-                var load_input_id = '#load_' + input_id;
-                $(show_input_id).css('display', 'block');
-                $(load_input_id).css('display', 'none');
+    var show_input_id = '#show_' + input_id; 
+    var load_input_id = '#load_' + input_id;
+    $(show_input_id).css('display', 'block');
+    $(load_input_id).css('display', 'none');
 
-                $(show_input_id).html(response);
-                
-                //$('#' + input_id).reset();
+    $(show_input_id).html(response);
+    
+    //$('#' + input_id).reset();
 
-                return;
+    return;
+};
+
+function show_waiting(input_id) {
+    var show_input_id = '#show_' + input_id; 
+    var load_input_id = '#load_' + input_id;
+    $(show_input_id).css('display', 'block');
+    $(load_input_id).css('display', 'none');
+
+    /* ==> const WAITING_IMAGE_URL must be set before calling this script. */
+    $(show_input_id).html('<div class="col-12 mw-100 mh-100 text-center align-middle"><img class="imgwaiting" src="' + WAITING_IMAGE_URL + '"></div>'); 
+    
+    return;
 };
 
 /* function to erase uploaded xml reports */

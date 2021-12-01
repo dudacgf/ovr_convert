@@ -1,54 +1,67 @@
 <script type="text/javascript">
-
 $(document).ready(function (e) {
 
 /* events for uploading and erasing input xml reports from openvas */    
-    $('#inputfiles').on('change', function() {
-        upload_files('/api/xml_reports', 'inputfiles', 'show_inputfiles');
-    });
+    Dropzone.options.inputfiles = {
+        url: '/api/xml_reports',
+        acceptFiles: '.xml',
+        maxFilesize: 200,
+        maxFiles: 10,
+        uploadMultiple: true,
+        parallelUploads: 10,
+        previewTemplate: '<div></div>',
+        init: function() {
+            this.on('success', function(file, response) {
+                show_response('inputfiles', response);
+            });
+            this.on('complete', function() {
+                this.removeAllFiles();
+            });
+        }
+    };
+    $('#inputfiles').dropzone();
+
     $('#erase_inputfiles').on('click', function() {
-        $.ajax({
-            url: '/api/erase_xml_reports',
-            cache: false,
-            contentType: false,
-            processData: false,
-            data: false,
-            type: 'post',
-        });
-        $('#show_inputfiles').html('<span class="erasedbox">Uploaded xml reports erased</span>');
-        setTimeout(function() { 
-            $('#show_inputfiles').html('');
-        }, 3000);
-        return;
+        erase_uploaded_files('/api/erase_xml_reports', 'inputfiles', '/api/xml_reports'); 
     });
-
+    
 /* events for uploading and erasing filters */
-{% for filter in ('networks', 'regex', 'cve') %}
-    $('#erase_{{ filter }}includes').on('click', function() {
-        erase_filter('/api/erase_{{ filter }}_includes', '{{ filter }}_includes', 'show_{{ filter }}includes', 
-                     '<span class="erasedbox">All filters erased</span>');
-    });
-    $('#erase_{{ filter }}excludes').on('click', function() {
-        erase_filter('/api/erase_{{ filter }}_excludes', '{{ filter }}_excludes', 'show_{{ filter }}excludes', 
-                     '<span class="erasedbox">All filters erased</span>');
-    });
+{%- for filter_id in ('networks', 'regex', 'cve') %}
+{%- for action in ('includes', 'excludes') %}
+{%- set input_field = (filter_id, action) | join('_') | lowerCamelCase %};
 
-    $('#{{filter }}_includes').on('change', function() {
-        upload_files('/api/{{ filter }}_includes', '{{ filter }}_includes', 'show_{{ filter }}includes');
-    });
+    Dropzone.options.{{ input_field }} = {
+        url: '/api/{{ filter_id }}_{{ action }}?input_field_name={{ filter_id }}_{{ action }}',
+        acceptedFiles: '.txt',
+        maxFileSize: 1,
+        maxFiles: 1,
+        parallelUploads: 1,
+        uploadMultiple: true,
+        previewTemplate: '<div></div>',
+        init: function() {
+            this.on('success', function(file, response) {
+                show_response('{{ filter_id }}_{{ action }}', response);
+            });
+            this.on('complete', function() {
+                this.removeAllFiles();
+            });
+        }
+    };
+    $('#{{ filter_id }}_{{ action }}').dropzone();
 
-    $('#{{ filter }}_excludes').on('change', function() {
-        upload_files('/api/{{ filter }}_excludes', '{{ filter }}_excludes', 'show_{{ filter }}excludes');
-    });
-{% endfor %}
+    $('#erase_{{filter_id }}_{{action}}').on('click', function() {
+        erase_filter('/api/erase_{{ filter_id }}_{{ action }}', '{{ filter_id }}_{{ action }}');
+    })
+    
+{%- endfor %}
+{%- endfor %}
 
 /* events to save the flags when changed */
-{% for flag in ('level', 'reporttype', 'format') %}
-/*    $('#{{ flag }}_flag').on('click', function() { */
+{%- for flag in ('level', 'reporttype', 'format') %}
     $('input:radio[name={{ flag }}]').on('click', function() {
         set_flag('/api/set_{{ flag }}_flag', '{{ flag }}');
     });
-{% endfor %}
+{%- endfor %}
 
 /* events to load, save and clear the configuration */
     $('#load_configuration').on('change', function() {

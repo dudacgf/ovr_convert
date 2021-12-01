@@ -1,6 +1,8 @@
 import os
 from io import StringIO, BytesIO
 
+from .libs.utils import size_format, valid_xml, valid_network, valid_regex, valid_cve
+
 import yaml
 from yaml.dumper import SafeDumper
 from yaml.loader import SafeLoader
@@ -12,18 +14,6 @@ from werkzeug.datastructures import FileStorage
 from flask_session import Session
 
 api_bp = Blueprint('api', __name__, url_prefix='/api')
-
-def size_format(b):
-    if b < 1000:
-              return '%i' % b + 'B'
-    elif 1000 <= b < 1000000:
-        return '%.1f' % float(b/1000) + 'KB'
-    elif 1000000 <= b < 1000000000:
-        return '%.1f' % float(b/1000000) + 'MB'
-    elif 1000000000 <= b < 1000000000000:
-        return '%.1f' % float(b/1000000000) + 'GB'
-    elif 1000000000000 <= b:
-        return '%.1f' % float(b/1000000000000) + 'TB'
 
 #
 # route to upload xml reports
@@ -44,6 +34,10 @@ def upload_xml_reports():
             filename = secure_filename(file.filename)
             secure_name = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
             file.save(secure_name)
+            
+            if not valid_xml(secure_name):
+                return f'<span class="erasedbox">File {filename} is not a valid Greenbone Security Assistant XML Report</span>'
+            
             lines.append(filename)
             filesize = os.path.getsize(secure_name)
             filetype = file.content_type.split('/')[1]
@@ -52,7 +46,6 @@ def upload_xml_reports():
             
     session['xml_reports'] = lines
     
-    #return render_template('boxed_results.html', lines=lines)   
     return render_template('boxed_results.html', lines=dataTable, 
                            show_table=True, titles=[('id', '#'), ('filename', 'File'), ('type', 'type'), ('size', 'size')], primary_key='id') 
 
@@ -71,7 +64,6 @@ def erase_xml_reports():
                 pass
         
         session.pop('xml_reports')
-    
 
     return 'OK'
 
@@ -84,12 +76,9 @@ def erase_xml_reports():
 @api_bp.route('/cve_includes', methods=['POST'])
 @api_bp.route('/cve_excludes', methods=['POST'])
 def upload_filter_file():
-    print(request)
     file = request.files['file[0]']
-    print(f"file: {file}")
     fp = FileStorage(file)
     memfile = fp.stream.read().decode('UTF-8')
-    print(memfile)
      
     filter_list = []
     
@@ -103,13 +92,19 @@ def upload_filter_file():
         dataTable = []
         for line in memfile.splitlines():
             if line != '':
+                if filter_class == 'networks' and not valid_network(line):
+                    return f'<span class="erasedbox">line {i} in {file.filename} is not a valid IP, IP-Range or Network CIDR:<br />{line}.</span>'
+                if filter_class == 'regex' and not valid_regex(line):
+                    return f'<span class="erasedbox">line {i} in {file.filename} is not a valid regular expression:<br />{line}.</span>'
+                if filter_class == 'cve' and not valid_cve(line):
+                    return f'<span class="erasedbox">line {i} in {file.filename} is not a valid CVE ID [CVE-yyyy-n+]:<br />{line}.</span>'
+                    
                 filter_list.append(line)
                 dataTable.append({'id': i, filter_name: line})
                 i = i + 1
     
         session['config'][filter_class][filter_option] = filter_list
 
-    #return render_template('boxed_results.html', lines=filter_list)
     return render_template('boxed_results.html', lines=dataTable, show_table=True, titles=[('id', '#'), (filter_name, f'{filter_option}')], primary_key='id') 
 
 

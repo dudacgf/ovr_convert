@@ -1,31 +1,51 @@
-{% from 'bootstrap/utils.html' import render_icon %}
 <!-- Network, Regex and CVE Filters Box -->
 <div class="row">
-    <div class="col-md m-2 p2 bg-secondary rounded text-light">
-        Filters
+    <div class="col-md mx-2 p-2 bg-secondary rounded text-light">
+        <div class="row">
+            <div class="col-md font-weight-bold">
+                Filters
+            </div>
+        </div>
         <div class="row">
             {%- for filter_name in ['Networks', 'Regex', 'CVE'] %}
-            <div class="col-md m-0">
-                <div class="mt-2 bg-white text-secondary text-center">
-                    &nbsp;{{ filter_name }}
-                </div>
-                {% set filter = filter_name.lower() %}
+            <div class="col-md px-4 py-2">
                 <div class="row">
-                    {% for title in ['include', 'exclude'] %}
-                    <div id="{{ filter }}_{{ title }}" class="col p-1 bg-secondary text-light" >
-                        <div id="{{ filter }}_{title}" class="col mh-100 " style="height: 200px; font-size: .7rem;">
+                    <div class="col-md-12 py-1 bg-white text-secondary text-center">
+                        {{ filter_name }}
+                    </div>
+                </div>
+                {%- set filter_id = filter_name.lower() %}
+                <div class="row">
+                    {%- for action in ['includes', 'excludes'] %}
+                    <div class="col-sm-6 p-0 border border-secondary bg-secondary text-light"  style="height: 200px; font-size: .7rem;">
+                        <div class="col">
                             <div class="row">
-                                <div class="col-sm-9 flex-fill ml-2 p-0" style="cursor: pointer;" onclick="document.getElementById('{{ filter }}_{{ title }}s').click();">
-                                    <div style="display: none;"><input type="file" id="{{ filter }}_{{ title }}s" name="{{ filter }}_{{ title }}s" accept=".txt"/></div>
-                                    <label for="{{ filter }}_{{ title }}s" style="cursor: pointer">{{ render_icon('cloud-arrow-up-fill') }}</label>
-                                    <span>&nbsp;{{ title.capitalize() }}:</span>
+                                <div class="col-md p-0">
+                                    {{ action.capitalize() }}:
                                 </div>
-                                <div class="col-sm-2 p-0 text-sm-right">
-                                    <input type="image" class="icon-white" title="remove all filters" src={{ url_for('.static', filename='images/x-circle-fill.svg') }} id="erase_{{ filter }}{{ title }}s" name="erase_{{ filter }}{{ title }}s"/>
+                                <div class="col-md ml-auto pr-0 text-right">
+                                    <input type="image" class="icon-white" title="remove all filters" data-toggle="tooltip" data-placement="top"
+                                        src={{ url_for('.static', filename='images/x-circle-fill.svg') }} 
+                                        id="erase_{{ filter_id }}_{{ action }}" name="erase_{{ filter_id }}_{{ action }}"/>
                                 </div>
                             </div>
                             <div class="row">
-                                <div id="show_{{ filter }}{{ title }}s" class="col d-sm-box mh-100 p-2 bg-white border-2 border-success" style="max-height: 170px; overflow-y: auto; height: 170px; font-size: 0.7rem; "></div>
+                                <div id="load_{{ filter_id }}_{{ action }}" class="col-md mh-100 p-2 bg-white mh-100 text-secondary align-middle"
+                                     style="max-height: 180px; overflow-y: auto; height: 180px; font-size: 0.7rem; overflow-x: hidden;">
+                                    <table style="height: 100%;">
+                                      <tbody><tr><td class="align-middle">
+                                    <form id="{{ filter_id }}_{{ action }}" class="dropzone dz-clickable">
+                                         <div class="dz-default dz-message p-0" data-dz-message="">
+                                             <span>Drop a .txt file with one {{ filter_id }} filter per line or <em>click to browse</em>.</span>
+                                         </div>
+                                    </form> 
+                                      </td></tr></tbody>
+                                    </table>
+                                </div>
+                                <div id="show_{{ filter_id }}_{{ action }}" class="col-md d-md-box mh-100 p-2 bg-white border-2 border-success" 
+                                     style="max-height: 180px; overflow-y: auto; height: 180px; font-size: 0.7rem; overflow-x: hidden; display: none;">
+                                    upload files here
+                                </div>
                             </div>
                         </div>
                     </div>

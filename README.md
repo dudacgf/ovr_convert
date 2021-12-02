@@ -1,6 +1,6 @@
 # OpenVAS XML Report Converter:
 
-[* I'll look what these all mean later. just pasted from @thegroundzero/openvasreporting (tks)
+<!--- I'll look what these all mean later. just pasted from @thegroundzero/openvasreporting (tks)
 
 [![GitHub version](https://badge.fury.io/gh/dudacgf%2Fovrgen.svg)](https://badge.fury.io/gh/dudacgf%2Fovrgen)
 [![License](https://img.shields.io/github/license/dudacgf/ovrgen.svg)](https://github.com/dudacgf/ovrgen/blob/master/LICENSE)
@@ -10,7 +10,7 @@
 [![Requirements Status](https://requires.io/github/dudacgf/ovrgen/requirements.svg?branch=master)](https://requires.io/github/dudacgf/ovrgen/requirements/?branch=master)
 [![PyPI - Version](https://img.shields.io/pypi/v/OpenVAS-Reporting.svg)](https://pypi.org/project/OpenVAS-Reporting/)
 [![PyPI - Format](https://img.shields.io/pypi/format/OpenVAS-Reporting.svg)](https://pypi.org/project/OpenVAS-Reporting/)
-*]
+-->
 
 A Flask light webpage to help convert [OpenVAS](http://www.openvas.org/) XML into reports. Uses latest [OpenVAS Reporting](https://github.com/TheGroundZero/openvasreporting)
 

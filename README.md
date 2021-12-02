@@ -1,15 +1,15 @@
 # OpenVAS XML Report Converter:
 
-<!--- I'll look what these all mean later. just pasted from @thegroundzero/openvasreporting (tks)
-
+[![CodeQL](https://github.com/dudacgf/ovr-converter/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/dudacgf/ovr-converter/actions/workflows/codeql-analysis.yml)
 [![GitHub version](https://badge.fury.io/gh/dudacgf%2Fovrgen.svg)](https://badge.fury.io/gh/dudacgf%2Fovrgen)
 [![License](https://img.shields.io/github/license/dudacgf/ovrgen.svg)](https://github.com/dudacgf/ovrgen/blob/master/LICENSE)
+
+<!--- I'll look what these all mean later. just pasted from @thegroundzero/openvasreporting (tks)
+
 [![Docs](https://readthedocs.org/projects/openvas-reporting/badge/?version=latest&style=flat)](https://openvas-reporting.sequr.be)
 [![Known Vulnerabilities](https://snyk.io/test/github/dudacgf/ovrgen/badge.svg?targetFile=requirements.txt)](https://snyk.io/test/github/dudacgf/ovrgen?targetFile=requirements.txt)
 [![codecov](https://codecov.io/gh/dudacgf/ovrgen/branch/master/graph/badge.svg)](https://codecov.io/gh/dudacgf/ovrgen)
 [![Requirements Status](https://requires.io/github/dudacgf/ovrgen/requirements.svg?branch=master)](https://requires.io/github/dudacgf/ovrgen/requirements/?branch=master)
-[![PyPI - Version](https://img.shields.io/pypi/v/OpenVAS-Reporting.svg)](https://pypi.org/project/OpenVAS-Reporting/)
-[![PyPI - Format](https://img.shields.io/pypi/format/OpenVAS-Reporting.svg)](https://pypi.org/project/OpenVAS-Reporting/)
 -->
 
 A Flask light webpage to help convert [OpenVAS](http://www.openvas.org/) XML into reports. Uses latest [OpenVAS Reporting](https://github.com/TheGroundZero/openvasreporting)

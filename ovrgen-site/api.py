@@ -8,7 +8,7 @@ from yaml.dumper import SafeDumper
 from yaml.loader import SafeLoader
 import tempfile
 
-from flask import Blueprint, render_template, request, session, current_app, jsonify, send_file, after_this_request, escape
+from flask import Blueprint, render_template, request, session, current_app, jsonify, send_file, after_this_request, Markup, escape
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import FileStorage
 from flask_session import Session
@@ -36,7 +36,7 @@ def upload_xml_reports():
             file.save(secure_name)
             
             if not valid_xml(secure_name):
-                return f'<span class="erasedbox">File {filename} is not a valid Greenbone Security Assistant XML Report</span>'
+                return Markup(f'<span class="erasedbox">File {filename} is not a valid Greenbone Security Assistant XML Report</span>')
             
             lines.append(filename)
             filesize = os.path.getsize(secure_name)
@@ -92,12 +92,12 @@ def upload_filter_file():
         dataTable = []
         for line in memfile.splitlines():
             if line != '':
-                if filter_class == 'networks' and not valid_network(line):
-                    return f'<span class="erasedbox">line {i} in {file.filename} is not a valid IP, IP-Range or Network CIDR:<br />{escape(line)}.</span>'
+                if filter_class == 'networks' and not valid_network(escape(line)):
+                    return Markup(f'<span class="erasedbox">line {i} in {file.filename} is not a valid IP, IP-Range or Network CIDR:<br />{escape(line)}.</span>')
                 if filter_class == 'regex' and not valid_regex(escape(line)):
-                    return f'<span class="erasedbox">line {i} in {file.filename} is not a valid regular expression:<br />{escape(line)}.</span>'
-                if filter_class == 'cve' and not valid_cve(line):
-                    return f'<span class="erasedbox">line {i} in {file.filename} is not a valid CVE ID [CVE-yyyy-n+]:<br />{escape(line)}.</span>'
+                    return Markup(f'<span class="erasedbox">line {i} in {file.filename} is not a valid regular expression:<br />{escape(line)}.</span>')
+                if filter_class == 'cve' and not valid_cve(escape(line)):
+                    return Markup(f'<span class="erasedbox">line {i} in {file.filename} is not a valid CVE ID [CVE-yyyy-n+]:<br />{escape(line)}.</span>')
                     
                 filter_list.append(line)
                 dataTable.append({'id': i, filter_name: line})
@@ -160,7 +160,7 @@ def set_flag():
 @api_bp.route("/upload_configuration", methods=['POST'])
 def upload_configuration():
     if 'files[]' not in request.files:
-        return '<span class="erasedbox">não recebi nada</span>'
+        return Markup('<span class="erasedbox">não recebi nada</span>')
 
     files = request.files.getlist('files[]')
     fp = FileStorage(files[0])
@@ -201,7 +201,7 @@ def upload_configuration():
         if 'includes' in configs_read['networks']:
             for l in configs_read['networks']['includes']:
                 if not valid_network(escape(l)):
-                    resp['networks_includes'] = f'<span class="erasedbox">Invalid IP, IP Range or Network CIDR in networks.includes:<br />{escape(l)}.</span>'
+                    resp['networks_includes'] = Markup(f'<span class="erasedbox">Invalid IP, IP Range or Network CIDR in networks.includes:<br />{escape(l)}.</span>')
                     break
             if not 'networks_includes' in resp:
                 resp['networks_includes'] = render_template('boxed_results.html', show_table=True,
@@ -212,7 +212,7 @@ def upload_configuration():
         if 'excludes' in configs_read['networks']:
             for l in configs_read['networks']['excludes']:
                 if not valid_network(l):
-                    resp['networks_excludes'] = f'<span class="erasedbox">Invalid IP, IP Range or Network CIDR in networks.excludes:<br />{escape(l)}.</span>'
+                    resp['networks_excludes'] = Markup(f'<span class="erasedbox">Invalid IP, IP Range or Network CIDR in networks.excludes:<br />{escape(l)}.</span>')
                     break
             if not 'networks_excludes' in resp:
                 resp['networks_excludes'] = render_template('boxed_results.html', show_table=True,
@@ -304,7 +304,6 @@ def new_session_configuration():
     session['config']['format'] = 'xlsx'
 
     resp = session['config']
-    resp['status'] = 200
 
     # remove ou prepara remoção de arquivos temporarios
     if 'tmp_files_to_remove' in session:
@@ -329,7 +328,7 @@ def generate_report():
         for filename in session['xml_reports']:
             fullpath_filename = os.path.join(current_app.config['UPLOAD_FOLDER'], secure_filename(filename))
             if not os.path.exists(fullpath_filename):
-                return f"could not find loaded file {secure_filename(filename)}."
+                return Markup(f"could not find loaded file {secure_filename(filename)}.")
             fullpath_filenames.append(fullpath_filename)
     else:
         return jsonify("Please load at least one openvas xml report before converting")

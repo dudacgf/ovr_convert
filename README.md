@@ -72,6 +72,6 @@ After you inserted filters and uploaded your .xml reports, the web page will loo
 
 Some of the ideas I still have for future functionality:
 
+ - insert/remove lines of filters directly on the interface
  - make it run under apache or nginx 
  - detect if running in the same server as Greenbone Security Assistant to offer convert report directly from gvm using [python-gvm](https://github.com/greenbone/python-gvm).
-

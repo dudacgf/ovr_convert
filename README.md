@@ -25,7 +25,7 @@ Convert any OpenVAS XML Report into an Excel worksheet or a Word Document. You c
  - [Flask-Session](https://flask-session.readthedocs.io/en/latest/)
  - [PyYAML](https://pyyaml.org/wiki/PyYAML)
  - [netaddr](https://netaddr.readthedocs.io/en/latest/api.html)
- - [defusedxml] (https://github.com/tiran/defusedxml)
+ - [defusedxml](https://github.com/tiran/defusedxml)
  
  and, of course
  - [openvasreporting](https://openvas-reporting.sequr.be/en/latest/)

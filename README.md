@@ -74,37 +74,37 @@ Use the menu *Configuration* to save the current configuration to a .yml file. I
 
 The .yml file will have the following format: 
 
-`format: xlsx
-level: none
-reporttype: vulnerability
-cve:
-  excludes:
-  - CVE-2021-27102
-  - CVE-2021-27101
-  - CVE-2021-27103
-  - CVE-2021-21017
-  - CVE-2021-28550
-  - CVE-2018-4939
-  - CVE-2018-15961
-  - CVE-2018-4878
+    format: xlsx
+    level: none
+    reporttype: vulnerability
+    cve:
+      excludes:
+      - CVE-2021-27102
+      - CVE-2021-27101
+      - CVE-2021-27103
+      - CVE-2021-21017
+      - CVE-2021-28550
+      - CVE-2018-4939
+      - CVE-2018-15961
+      - CVE-2018-4878
 
-networks:
-  excludes:
-  - 192.168.20.234
-  - 192.168.20.236
-  - 192.168.20.237
-  - 192.168.20.238
-  - 192.168.20.239
-  - 192.168.168.120
-  includes:
-  - 192.168.20.0/24
-  - 192.168.24.100-192.168.24.199
-  - 192.168.21.4
-regex:
-  excludes:
-  - defender
-  - firefox
-  - report.*default`
+    networks:
+      excludes:
+      - 192.168.20.234
+      - 192.168.20.236
+      - 192.168.20.237
+      - 192.168.20.238
+      - 192.168.20.239
+      - 192.168.168.120
+      includes:
+      - 192.168.20.0/24
+      - 192.168.24.100-192.168.24.199
+      - 192.168.21.4
+    regex:
+      excludes:
+      - defender
+      - firefox
+      - report.*default
 
 ## Ideas
 

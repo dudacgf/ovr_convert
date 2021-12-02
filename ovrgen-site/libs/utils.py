@@ -52,7 +52,7 @@ def valid_regex(regex_entry):
     return True
 
 def valid_cve(cve_entry):
-    return re.match("CVE-\d\d\d\d-\d+", cve_entry)
+    return re.match("^CVE-\d\d\d\d-\d+$", cve_entry)
 
 def make_data_table(lines=None, header=None):
     if lines is None or header is None:

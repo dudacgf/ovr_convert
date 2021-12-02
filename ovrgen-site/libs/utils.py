@@ -49,8 +49,18 @@ def valid_regex(regex_entry):
         re.compile(regex_entry, re.IGNORECASE)
     except re.error:
         return False
-
     return True
 
 def valid_cve(cve_entry):
     return re.match("CVE-\d\d\d\d-\d+", cve_entry)
+
+def make_data_table(lines=None, header=None):
+    if lines is None or header is None:
+        return({})
+    
+    i = 1    
+    dataTable = []
+    for l in lines:
+        dataTable.append({'id': i, header: l})
+        i = i + 1
+    return dataTable

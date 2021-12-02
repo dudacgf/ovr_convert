@@ -32,10 +32,10 @@ def valid_xml(filename):
 
 def valid_network(ip):
     if '-' in ip:
-        _start_ip, _end_ip = ip.split('-')
         try:
+            _start_ip, _end_ip = ip.split('-')
             ip_range = netaddr.IPRange(_start_ip, _end_ip)
-        except AddrFormatError:
+        except (ValueError, AddrFormatError):
             return False
     else:
         try:

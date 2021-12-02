@@ -62,11 +62,11 @@ Convert any OpenVAS XML Report into an Excel worksheet or a Word Document. You c
 
 ## Filters
 
-You can create text files to filter in or out Networks, Regexes or CVEs from the converted report. Take a look at the [openvasreporting](https://github.com/thegroundzero/openvasreporting) to find out how to use them.
+You can create text files to filter in or out Networks, Regexes or CVEs from the converted report. Take a look at the [openvasreporting documentation](https://github.com/thegroundzero/openvasreporting) to find out how to use them.
 
 After you inserted filters and uploaded your .xml reports, the web page will look like this:
 
-![Page example screenshot](docs/images/ovrgen-screenshot.png?raw=true)
+![Page example screenshot](docs/images/ovrgen-filters-reports.png?raw=true)
 
 ## Ideas
 

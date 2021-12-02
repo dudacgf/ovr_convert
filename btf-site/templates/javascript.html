@@ -1,6 +1,17 @@
 <script type="text/javascript">
 $(document).ready(function (e) {
 
+/* prevent dropping outsite dropzones */
+    window.addEventListener("dragover",function(e){
+        e = e || event;
+        e.preventDefault();
+    },false);
+    window.addEventListener("drop",function(e){
+        e = e || event;
+        e.preventDefault();
+    },false);
+
+
 /* events for uploading and erasing input xml reports from openvas */    
     Dropzone.options.inputfiles = {
         url: '/api/xml_reports',

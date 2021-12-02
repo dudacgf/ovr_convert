@@ -46,7 +46,7 @@ def upload_xml_reports():
             
     session['xml_reports'] = lines
     
-    return render_template('boxed_results.html', lines=dataTable, 
+    return render_template('boxed_results.html', lines=dataTable, colgroup_classes=('col-1', 'col-auto', 'col-2', 'col-2 justify-contents-right'),
                            show_table=True, titles=[('id', '#'), ('filename', 'File'), ('type', 'type'), ('size', 'size')], primary_key='id') 
 
 
@@ -105,7 +105,8 @@ def upload_filter_file():
     
         session['config'][filter_class][filter_option] = filter_list
 
-    return render_template('boxed_results.html', lines=dataTable, show_table=True, titles=[('id', '#'), (filter_name, f'{filter_option}')], primary_key='id') 
+    return render_template('boxed_results.html', lines=dataTable, colgroup_classes=('col-1', 'col-auto'),
+                           show_table=True, titles=[('id', '#'), (filter_name, f'{filter_option}')], primary_key='id') 
 
 
 #
@@ -291,10 +292,10 @@ def generate_report():
 @api_bp.route('/next_theme', methods=['POST'])
 def next_theme():
     
-    #print(f"current theme: {current_app.config['BOOTSTRAP_BOOTSWATCH_THEME']}")
+    print(f"current theme: {current_app.config['BOOTSTRAP_BOOTSWATCH_THEME']}")
     
-    themes = ['cosmo', 'cyborg', 'darkly', 'flatly', 'journal', 'litera', 
-              'pulse', 'sandstone', 'slate', 'solar', 'spacelab', 'superhero', 'united']
+    themes = ['cosmo', 'flatly', 'journal', 'litera', 'pulse', 
+              'sandstone', 'slate', 'solar', 'spacelab', 'superhero', 'united']
     
     current_theme = current_app.config['BOOTSTRAP_BOOTSWATCH_THEME']
     current_theme_index = themes.index(current_theme)
@@ -307,6 +308,6 @@ def next_theme():
     # resets configuration - document will be reloaded at return to show new theme
     new_session_configuration()
     
-    #print(f"new theme: {current_app.config['BOOTSTRAP_BOOTSWATCH_THEME']}")
+    print(f"new theme: {current_app.config['BOOTSTRAP_BOOTSWATCH_THEME']}")
 
     return '200'

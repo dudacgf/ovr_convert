@@ -1,6 +1,8 @@
-{% from 'bootstrap/table.html' import render_table %}
+{% from 'col_table.html' import render_colgroup_table %}
 {% if show_table %}
-    {{ render_table(lines, table_classes='col-sm-12 p-0 m-0 table table-sm table-responsive table-striped ', header_classes="col-sm-12 thead-dark col-12", titles=titles, primary_key=primary_key, responsive=True) }}
+    {{ render_colgroup_table(lines, table_classes='col-sm-12 p-0 m-0 table table-sm table-responsive table-striped ', 
+       colgroup_classes=colgroup_classes, header_classes="col-sm-12 thead-dark col-12", 
+       titles=titles, primary_key=primary_key, responsive=True) }}
 {% else %}
 <div class="col">
 {%- for line in lines %}

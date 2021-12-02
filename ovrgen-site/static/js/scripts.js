@@ -188,12 +188,12 @@ function reset_configuration() {
     document.getElementById('level_none').checked = true;
     document.getElementById('reporttype_vulnerability').checked = true;
     document.getElementById('format_xlsx').checked = true;
-    $('#show_networksincludes').html('');
-    $('#show_networksexcludes').html('');
-    $('#show_regexincludes').html('');
-    $('#show_regexexcludes').html('');
-    $('#show_cveincludes').html('');
-    $('#show_cveexcludes').html('');
+    $('#show_networks_includes').html('');
+    $('#show_networks_excludes').html('');
+    $('#show_regex_includes').html('');
+    $('#show_regex_excludes').html('');
+    $('#show_cve_includes').html('');
+    $('#show_cve_excludes').html('');
 }
 
 /* function to clear the configuration

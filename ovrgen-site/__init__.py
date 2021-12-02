@@ -16,6 +16,7 @@ def create_app():
       MAX_CONTENT_LENGTH = 200*1024*1024, # to generate very big reports. ymmv 
       SESSION_PERMANENT = False,
       SESSION_TYPE = 'filesystem',
+      SESSION_COOKIE_SAMESITE = "Lax",
       BOOTSTRAP_BOOTSWATCH_THEME = 'cosmo',
       BOOTSTRAP_BTN_SIZE = 'sm',
     )

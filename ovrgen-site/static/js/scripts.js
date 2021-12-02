@@ -156,36 +156,24 @@ function upload_configuration (server_url, input_id, msg_id) {
                         if (response.format) {
                             document.getElementById('format' + '_' + response.format).checked = true;
                         }
-                        if (response.show_networksincludes) {
-                            $('#show_networksincludes').html(response.show_networksincludes);
-                        } else {
-                            $('#show_networksincludes').html('');
-                        }
-                        if (response.show_networksexcludes) {
-                            $('#show_networksexcludes').html(response.show_networksexcludes);
-                        } else {
-                            $('#show_networksexcludes').html('');
-                        }
-                        if (response.show_regexincludes) {
-                            $('#show_regexincludes').html(response.show_regexincludes);
-                        } else {
-                            $('#show_regexincludes').html('');
-                        }
-                        if (response.show_regexexcludes) {
-                            $('#show_regexexcludes').html(response.show_regexexcludes);
-                        } else {
-                            $('#show_regexexcludes').html('');
-                        }
-                        if (response.show_cveincludes) {
-                            $('#show_cveincludes').html(response.show_cveincludes);
-                        } else {
-                            $('#show_cveincludes').html('');
-                        }
-                        if (response.show_cveexcludes) {
-                            $('#show_cveexcludes').html(response.show_cveexcludes);
-                        } else {
-                            $('#show_cveincludes').html('');
-                        }
+                        if (response.networks_includes) {
+                            show_response('networks_includes', response.networks_includes);
+                        } 
+                        if (response.networks_excludes) {
+                            show_response('networks_excludes', response.networks_excludes);
+                        } 
+                        if (response.regex_includes) {
+                            show_response('regex_includes', response.regex_includes);
+                        } 
+                        if (response.regex_excludes) {
+                            show_response('regex_excludes', response.regex_excludes);
+                        } 
+                        if (response.cve_includes) {
+                            show_response('cve_includes', response.cve_includes);
+                        } 
+                        if (response.cve_excludes) {
+                            show_response('cve_excludes', response.cve_excludes);
+                        } 
                     },
                     error: function (response) {
                         $(msg_id).html(response);

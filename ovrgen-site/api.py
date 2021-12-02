@@ -1,7 +1,7 @@
 import os
 from io import StringIO, BytesIO
 
-from .libs.utils import size_format, valid_xml, valid_network, valid_regex, valid_cve
+from .libs.utils import size_format, valid_xml, valid_network, valid_regex, valid_cve, make_data_table
 
 import yaml
 from yaml.dumper import SafeDumper
@@ -198,12 +198,18 @@ def upload_configuration():
     for filter in ['networks', 'regex', 'cve']:
         if filter in configs_read:
             if 'includes' in configs_read[filter]:
-                resp['show_' + filter + 'includes'] = render_template('boxed_results.html', lines=configs_read[filter]['includes'])
+                resp[filter + '_includes'] = render_template('boxed_results.html', show_table=True,
+                                                             lines=make_data_table(lines=configs_read[filter]['includes'], header=filter),
+                                                             colgroup_classes=('col-1', 'col-auto'),
+                                                             titles=[('id', '#'), (filter, 'includes')], primary_key='id')
                 if not filter in session['config']:
                     session['config'][filter] = dict()
                 session['config'][filter]['includes'] = configs_read[filter]['includes']
             if 'excludes' in configs_read[filter]:
-                resp['show_' + filter + 'excludes'] = render_template('boxed_results.html', lines=configs_read[filter]['excludes'])
+                resp[filter + '_excludes'] = render_template('boxed_results.html', show_table=True,
+                                                             lines=make_data_table(lines=configs_read[filter]['excludes'], header=filter),
+                                                             colgroup_classes=('col-1', 'col-auto'),
+                                                             titles=[('id', '#'), (filter, 'excludes')], primary_key='id')
                 if not filter in session['config']:
                     session['config'][filter] = dict()
                 session['config'][filter]['excludes'] = configs_read[filter]['excludes']

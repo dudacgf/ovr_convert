@@ -87,7 +87,6 @@ The .yml file will have the following format:
       - CVE-2018-4939
       - CVE-2018-15961
       - CVE-2018-4878
-
     networks:
       excludes:
       - 192.168.20.234

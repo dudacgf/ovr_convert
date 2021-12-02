@@ -41,6 +41,7 @@ jobs:
           # For example `deployment.yaml` for a Kubernetes deployment manifest
           # or `main.tf` for a Terraform configuration file
           file: your-file-to-test.yaml
+          json: true
       - uses: garethr/snyk-to-sarif@master
       - uses: actions/upload-artifact@v2
         with:

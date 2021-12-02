@@ -28,25 +28,7 @@ background-color:#224110;
 color: white;
 }
 
-.flagtitle {
-margin: 0;
-background-color: #66c430;
-width: 20%;
-height: auto;
-padding: 6px 10px 6px 4px;
-font-size: 12px;
-font-weight: bold;
-float: left;
-clear: left;
-text-align: right;
-}
-
 /* generate report button region */
-.generatecontainer { 
-  height: 50px;
-  position: relative;
-  border: 0; 
-}
 
 .generatebox {
 position: absolute; 

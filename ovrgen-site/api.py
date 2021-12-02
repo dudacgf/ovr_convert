@@ -8,7 +8,7 @@ from yaml.dumper import SafeDumper
 from yaml.loader import SafeLoader
 import tempfile
 
-from flask import Blueprint, render_template, request, session, current_app, jsonify, send_file, after_this_request
+from flask import Blueprint, render_template, request, session, current_app, jsonify, send_file, after_this_request, escape
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import FileStorage
 from flask_session import Session
@@ -93,11 +93,11 @@ def upload_filter_file():
         for line in memfile.splitlines():
             if line != '':
                 if filter_class == 'networks' and not valid_network(line):
-                    return f'<span class="erasedbox">line {i} in {file.filename} is not a valid IP, IP-Range or Network CIDR:<br />{line}.</span>'
-                if filter_class == 'regex' and not valid_regex(line):
-                    return f'<span class="erasedbox">line {i} in {file.filename} is not a valid regular expression:<br />{line}.</span>'
+                    return f'<span class="erasedbox">line {i} in {file.filename} is not a valid IP, IP-Range or Network CIDR:<br />{escape(line)}.</span>'
+                if filter_class == 'regex' and not valid_regex(escape(line)):
+                    return f'<span class="erasedbox">line {i} in {file.filename} is not a valid regular expression:<br />{escape(line)}.</span>'
                 if filter_class == 'cve' and not valid_cve(line):
-                    return f'<span class="erasedbox">line {i} in {file.filename} is not a valid CVE ID [CVE-yyyy-n+]:<br />{line}.</span>'
+                    return f'<span class="erasedbox">line {i} in {file.filename} is not a valid CVE ID [CVE-yyyy-n+]:<br />{escape(line)}.</span>'
                     
                 filter_list.append(line)
                 dataTable.append({'id': i, filter_name: line})
@@ -195,27 +195,84 @@ def upload_configuration():
         resp['format'] = 'none'
         session['config']['format'] = 'none'
     
-    for filter in ['networks', 'regex', 'cve']:
-        if filter in configs_read:
-            if 'includes' in configs_read[filter]:
-                resp[filter + '_includes'] = render_template('boxed_results.html', show_table=True,
-                                                             lines=make_data_table(lines=configs_read[filter]['includes'], header=filter),
-                                                             colgroup_classes=('col-1', 'col-auto'),
-                                                             titles=[('id', '#'), (filter, 'includes')], primary_key='id')
-                if not filter in session['config']:
-                    session['config'][filter] = dict()
-                session['config'][filter]['includes'] = configs_read[filter]['includes']
-            if 'excludes' in configs_read[filter]:
-                resp[filter + '_excludes'] = render_template('boxed_results.html', show_table=True,
-                                                             lines=make_data_table(lines=configs_read[filter]['excludes'], header=filter),
-                                                             colgroup_classes=('col-1', 'col-auto'),
-                                                             titles=[('id', '#'), (filter, 'excludes')], primary_key='id')
-                if not filter in session['config']:
-                    session['config'][filter] = dict()
-                session['config'][filter]['excludes'] = configs_read[filter]['excludes']
+    if 'networks' in configs_read:
+        if not 'networks' in session['config']:
+            session['config']['networks'] = dict()
+        if 'includes' in configs_read['networks']:
+            for l in configs_read['networks']['includes']:
+                if not valid_network(escape(l)):
+                    resp['networks_includes'] = f'<span class="erasedbox">Invalid IP, IP Range or Network CIDR in networks.includes:<br />{escape(l)}.</span>'
+                    break
+            if not 'networks_includes' in resp:
+                resp['networks_includes'] = render_template('boxed_results.html', show_table=True,
+                               lines=make_data_table(lines=configs_read['networks']['includes'], header='networks'),
+                               colgroup_classes=('col-1', 'col-auto'),
+                               titles=[('id', '#'), ('networks', 'includes')], primary_key='id')
+                session['config']['networks']['includes'] = configs_read['networks']['includes']
+        if 'excludes' in configs_read['networks']:
+            for l in configs_read['networks']['excludes']:
+                if not valid_network(l):
+                    resp['networks_excludes'] = f'<span class="erasedbox">Invalid IP, IP Range or Network CIDR in networks.excludes:<br />{escape(l)}.</span>'
+                    break
+            if not 'networks_excludes' in resp:
+                resp['networks_excludes'] = render_template('boxed_results.html', show_table=True,
+                               lines=make_data_table(lines=configs_read['networks']['excludes'], header='networks'),
+                               colgroup_classes=('col-1', 'col-auto'),
+                               titles=[('id', '#'), ('networks', 'excludes')], primary_key='id')
+                session['config']['networks']['excludes'] = configs_read['networks']['excludes']
     
-    resp['status'] = 200
+    if 'regex' in configs_read:
+        if not 'regex' in session['config']:
+            session['config']['regex'] = dict()
+        if 'includes' in configs_read['regex']:
+            for l in configs_read['regex']['includes']:
+                if not valid_regex(escape(l)):
+                    resp['regex_includes'] = f'<span class="erasedbox">Invalid regular expression in regex.includes:<br />{escape(l)}.</span>'
+                    break
+            if not 'regex_includes' in resp:
+                resp['regex_includes'] = render_template('boxed_results.html', show_table=True,
+                               lines=make_data_table(lines=configs_read['regex']['includes'], header='regex'),
+                               colgroup_classes=('col-1', 'col-auto'),
+                               titles=[('id', '#'), ('regex', 'includes')], primary_key='id')
+                session['config']['regex']['includes'] = configs_read['regex']['includes']
+        if 'excludes' in configs_read['regex']:
+            for l in configs_read['regex']['excludes']:
+                if not valid_regex(escape(l)):
+                    resp['regex_excludes'] = f'<span class="erasedbox">Invalid regular expression in regex.excludes:<br />{escape(l)}.</span>'
+                    break
+            if not 'regex_excludes' in resp:
+                resp['regex_excludes'] = render_template('boxed_results.html', show_table=True,
+                               lines=make_data_table(lines=configs_read['regex']['excludes'], header='regex'),
+                               colgroup_classes=('col-1', 'col-auto'),
+                               titles=[('id', '#'), ('regex', 'excludes')], primary_key='id')
+                session['config']['regex']['excludes'] = configs_read['regex']['excludes']
     
+    if 'cve' in configs_read:
+        if not 'cve' in session['config']:
+            session['config']['cve'] = dict()
+        if 'includes' in configs_read['cve']:
+            for l in configs_read['cve']['includes']:
+                if not valid_cve(escape(l)):
+                    resp['cve_includes'] = f'<span class="erasedbox">Invalid CVE id in cve.includes:<br />{escape(l)}.</span>'
+                    break
+            if not 'cve_includes' in resp:
+                resp['cve_includes'] = render_template('boxed_results.html', show_table=True,
+                               lines=make_data_table(lines=configs_read['cve']['includes'], header='cve'),
+                               colgroup_classes=('col-1', 'col-auto'),
+                               titles=[('id', '#'), ('cve', 'includes')], primary_key='id')
+                session['config']['cve']['includes'] = configs_read['cve']['includes']
+        if 'excludes' in configs_read['cve']:
+            for l in configs_read['cve']['excludes']:
+                if not valid_cve(escape(l)):
+                    resp['cve_excludes'] = f'<span class="erasedbox">Invalid CVE id in cve.excludes:<br />{escape(l)}.</span>'
+                    break
+            if not 'cve_excludes' in resp:
+                resp['cve_excludes'] = render_template('boxed_results.html', show_table=True,
+                               lines=make_data_table(lines=configs_read['cve']['excludes'], header='cve'),
+                               colgroup_classes=('col-1', 'col-auto'),
+                               titles=[('id', '#'), ('cve', 'excludes')], primary_key='id')
+                session['config']['cve']['excludes'] = configs_read['cve']['excludes']
+
     return jsonify(resp), 200
 
 #

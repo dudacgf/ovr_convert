@@ -1,12 +1,4 @@
 {% from 'col_table.html' import render_colgroup_table %}
-{% if show_table %}
-    {{ render_colgroup_table(lines, table_classes='col-sm-12 p-0 m-0 table table-sm table-responsive table-striped ', 
-       colgroup_classes=colgroup_classes, header_classes="col-sm-12 thead-dark col-12", 
-       titles=titles, primary_key=primary_key, responsive=True) }}
-{% else %}
-<div class="col">
-{%- for line in lines %}
-<div class="linebox">{{ line }}</div>
-{%- endfor %}
-</div>
-{% endif %}
+{{ render_colgroup_table(lines, table_classes='col-sm-12 p-0 m-0 table table-sm table-responsive table-striped ', 
+                         colgroup_classes=colgroup_classes, show_header=show_header,
+                         titles=titles, primary_key=primary_key, responsive=True) }}

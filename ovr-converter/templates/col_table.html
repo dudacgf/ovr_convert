@@ -10,6 +10,7 @@
                       table_classes=None,
                       colgroup_classes=None,
                       header_classes=None,
+                      show_header=True,
                       responsive=False,
                       responsive_class='table-responsive',
                       model=None,
@@ -38,6 +39,7 @@
         {%- endfor %}
     </colgroup>
     {%- endif %}
+    {%- if show_header %}
     <thead{%- if header_classes %} class="{{ header_classes }}"{%- endif %}>
     <tr>
     {%- for title in titles %}
@@ -60,6 +62,7 @@
     {%- endif %}
     </tr>
     </thead>
+    {%- endif %}
     <tbody>
     {%- for row in data %}
     <tr>

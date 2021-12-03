@@ -46,8 +46,9 @@ def upload_xml_reports():
             
     session['xml_reports'] = lines
     
-    return render_template('boxed_results.html', lines=dataTable, colgroup_classes=('col-1', 'col-auto', 'col-2', 'col-2 justify-contents-right'),
-                           show_table=True, titles=[('id', '#'), ('filename', 'File'), ('type', 'type'), ('size', 'size')], primary_key='id') 
+    return render_template('boxed_results.html', lines=dataTable, 
+                           colgroup_classes=('col-1', 'col-auto', 'col-2', 'col-2 justify-contents-right'),
+                           titles=[('id', '#'), ('filename', 'File'), ('type', 'type'), ('size', 'size')], primary_key='id') 
 
 
 #
@@ -105,7 +106,7 @@ def upload_filter_file():
     
         session['config'][filter_class][filter_option] = filter_list
 
-    return render_template('boxed_results.html', lines=dataTable, colgroup_classes=('col-1', 'col-auto'),
+    return render_template('boxed_results.html', lines=dataTable, colgroup_classes=('col-1', 'col-auto'), show_header=True,
                            show_table=True, titles=[('id', '#'), (filter_name, f'{filter_option}')], primary_key='id') 
 
 
@@ -204,10 +205,10 @@ def upload_configuration():
                     resp['networks_includes'] = Markup(f'<span class="erasedbox">Invalid IP, IP Range or Network CIDR in networks.includes:<br />{escape(l)}.</span>')
                     break
             if not 'networks_includes' in resp:
-                resp['networks_includes'] = render_template('boxed_results.html', show_table=True,
+                resp['networks_includes'] = render_template('boxed_results.html', show_headers=True,
                                lines=make_data_table(lines=configs_read['networks']['includes'], header='networks'),
                                colgroup_classes=('col-1', 'col-auto'),
-                               titles=[('id', '#'), ('networks', 'includes')], primary_key='id')
+                               primary_key='id', primary_key_title='#')
                 session['config']['networks']['includes'] = configs_read['networks']['includes']
         if 'excludes' in configs_read['networks']:
             for l in configs_read['networks']['excludes']:
@@ -215,10 +216,9 @@ def upload_configuration():
                     resp['networks_excludes'] = Markup(f'<span class="erasedbox">Invalid IP, IP Range or Network CIDR in networks.excludes:<br />{escape(l)}.</span>')
                     break
             if not 'networks_excludes' in resp:
-                resp['networks_excludes'] = render_template('boxed_results.html', show_table=True,
+                resp['networks_excludes'] = render_template('boxed_results.html', 
                                lines=make_data_table(lines=configs_read['networks']['excludes'], header='networks'),
-                               colgroup_classes=('col-1', 'col-auto'),
-                               titles=[('id', '#'), ('networks', 'excludes')], primary_key='id')
+                               colgroup_classes=('col-1', 'col-auto'), titles=[('id', '#'), ('networks', 'excludes')], primary_key='id')
                 session['config']['networks']['excludes'] = configs_read['networks']['excludes']
     
     if 'regex' in configs_read:
@@ -230,7 +230,7 @@ def upload_configuration():
                     resp['regex_includes'] = f'<span class="erasedbox">Invalid regular expression in regex.includes:<br />{escape(l)}.</span>'
                     break
             if not 'regex_includes' in resp:
-                resp['regex_includes'] = render_template('boxed_results.html', show_table=True,
+                resp['regex_includes'] = render_template('boxed_results.html', 
                                lines=make_data_table(lines=configs_read['regex']['includes'], header='regex'),
                                colgroup_classes=('col-1', 'col-auto'),
                                titles=[('id', '#'), ('regex', 'includes')], primary_key='id')
@@ -241,7 +241,7 @@ def upload_configuration():
                     resp['regex_excludes'] = f'<span class="erasedbox">Invalid regular expression in regex.excludes:<br />{escape(l)}.</span>'
                     break
             if not 'regex_excludes' in resp:
-                resp['regex_excludes'] = render_template('boxed_results.html', show_table=True,
+                resp['regex_excludes'] = render_template('boxed_results.html', 
                                lines=make_data_table(lines=configs_read['regex']['excludes'], header='regex'),
                                colgroup_classes=('col-1', 'col-auto'),
                                titles=[('id', '#'), ('regex', 'excludes')], primary_key='id')
@@ -256,7 +256,7 @@ def upload_configuration():
                     resp['cve_includes'] = f'<span class="erasedbox">Invalid CVE id in cve.includes:<br />{escape(l)}.</span>'
                     break
             if not 'cve_includes' in resp:
-                resp['cve_includes'] = render_template('boxed_results.html', show_table=True,
+                resp['cve_includes'] = render_template('boxed_results.html', 
                                lines=make_data_table(lines=configs_read['cve']['includes'], header='cve'),
                                colgroup_classes=('col-1', 'col-auto'),
                                titles=[('id', '#'), ('cve', 'includes')], primary_key='id')

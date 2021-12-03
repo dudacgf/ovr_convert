@@ -1,8 +1,8 @@
 {% from 'bootstrap/utils.html' import render_icon %}
 <div class="row">
     <div class="col p-0">
-      <nav class="navbar navbar-expand-sm navbar-default navbar-primary bg-primary">
-      <div class="navbar-brand mb0 text-light">
+      <nav class="navbar navbar-expand-sm navbar-default navbar-primary bg-success">
+      <div class="navbar-brand mb0 text-dark">
           <img src=" {{ url_for(".static", filename="images/rex-white.png") }}" width="30" height="30" }} class="d-inline-block align-top" alt="t.rex head" />
           OpenVAS XML Report Converter
       </div>
@@ -13,7 +13,7 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle text-light" href="" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="upload a .yml file with the configuration">
+            <a class="nav-link dropdown-toggle text-dark" href="" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="upload a .yml file with the configuration">
               Configuration {{ render_icon('three-dots-vertical') }}
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">

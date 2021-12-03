@@ -1,11 +1,11 @@
 <div class="row">
-    <div class="col m-2 p-2 bg-white text-secondary border border-secondary rounded shadow font-weight-bold">
-    Options
-    <!--  vulnerability minimum level selection -->
+    <div class="col m-2 py-1 px-2 bg-secondary text-light border border-secondary rounded shadow font-weight-bold">
     <div class="row">
-        <div class="col-sm m-2 pl-sm-1">&nbsp;Level:
+        <div class="col-sm-1 m-2 pl-sm-1">Options</div>
+        <!--  vulnerability minimum level selection -->
+        <div class="col-sm-4 m-2 pl-sm-1 font-weight-normal">&nbsp;Level:
             <div class="row">
-                <div id="level_flag" class="pl-3 text-light font-weight-normal">
+                <div id="level_flag" class="pl-3 btn-group font-weight-normal">
                     <input type="radio" class="flags-radio" id="level_critical" name="level" value="critical" autocomplete="off">
                     <label for="level_critical">critical</label>
                     <input type="radio" class="flags-radio" id="level_high" name="level" value="high">
@@ -19,10 +19,10 @@
                 </div>
             </div>
         </div>
-    <!-- report format (xlsx, docx, csv) selection -->
-        <div class="col-sm m-2 pl-sm-1">Format:
+        <!-- report format (xlsx, docx, csv) selection -->
+        <div class="col-sm-3 m-2 pl-sm-1 font-weight-normal">Format:
             <div class="row">
-                <div id="format_flag" class="pl-3 text-light font-weight-normal">
+                <div id="format_flag" class="pl-3 btn-group font-weight-normal">
                     <input type="radio" class="flags-radio" id="format_xlsx" name="format" value="xlsx" checked="checked">
                     <label for="format_xlsx">xlsx</label>
                     <input type="radio" class="flags-radio" id="format_docx" name="format" value="docx">
@@ -32,10 +32,10 @@
                 </div>
             </div>
         </div>
-    <!-- report type (by host and its vulnerabilities or by vulnerability and its hosts) selection -->
-        <div class="col-sm m-2 pl-sm-1">Report by:
+        <!-- report type (by host and its vulnerabilities or by vulnerability and its hosts) selection -->
+        <div class="col-sm-2 m-2 pl-sm-1 font-weight-normal">Report by:
             <div class="row">
-                <div id="reporttype_flag" class="pl-3 text-light font-weight-normal">
+                <div id="reporttype_flag" class="pl-3 btn-group font-weight-normal">
                     <input type="radio" class="flags-radio" id="reporttype_vulnerability" name="reporttype" value="vulnerability" checked="checked">
                     <label for="reporttype_vulnerability">vulnerability</label>
                     <input type="radio" class="flags-radio" id="reporttype_host" name="reporttype" value="host">
@@ -43,5 +43,6 @@
                 </div>
             </div>
         </div>
-    </div></div>
+    </div>
+    </div>
 </div>

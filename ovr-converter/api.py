@@ -46,9 +46,8 @@ def upload_xml_reports():
             
     session['xml_reports'] = lines
     
-    return render_template('boxed_results.html', lines=dataTable, 
-                           colgroup_classes=('col-1', 'col-auto', 'col-2', 'col-2 justify-contents-right'),
-                           titles=[('id', '#'), ('filename', 'File'), ('type', 'type'), ('size', 'size')], primary_key='id') 
+    return render_template('boxed_results.html', lines=dataTable, show_header=False,
+                           colgroup_classes=('col-1', 'col-auto', 'col-2', 'col-2'), primary_key='id') 
 
 
 #
@@ -106,8 +105,8 @@ def upload_filter_file():
     
         session['config'][filter_class][filter_option] = filter_list
 
-    return render_template('boxed_results.html', lines=dataTable, colgroup_classes=('col-1', 'col-auto'), show_header=True,
-                           show_table=True, titles=[('id', '#'), (filter_name, f'{filter_option}')], primary_key='id') 
+    return render_template('boxed_results.html', lines=dataTable, colgroup_classes=('col-1', 'col-auto'), show_header=False,
+                           primary_key='id') 
 
 
 #

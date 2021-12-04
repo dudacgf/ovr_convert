@@ -22,8 +22,10 @@
                       delete_url=None,
                       new_url=None,
                       action_pk_placeholder=':id') %}
-{%- if not titles %}
-    {%- set titles = get_table_titles(data, primary_key, primary_key_title) %}
+{%- if show_header %}
+    {%- if not titles  %}
+        {%- set titles = get_table_titles(data, primary_key, primary_key_title) %}
+    {%- endif %}
 {%- endif %}
 {%- if responsive %}
 <div class="{{ responsive_class }}">
@@ -40,15 +42,15 @@
     </colgroup>
     {%- endif %}
     {%- if show_header %}
-    <thead{%- if header_classes %} class="{{ header_classes }}"{%- endif %}>
-    <tr>
-    {%- for title in titles %}
-        <th scope="col">{{ title[1] }}</th>
-    {%- endfor %}
-    {%- if show_actions %}
+        <thead{%- if header_classes %} class="{{ header_classes }}"{%- endif %}>
+        <tr>
+        {%- for title in titles %}
+            <th scope="col">{{ title[1] }}</th>
+        {%- endfor %}
+        {%- if show_actions %}
         <th scope="col">{{ actions_title }}
-        {%- if new_url %}
-            <a class="action-icon text-decoration-none"
+            {%- if new_url %}
+             <a class="action-icon text-decoration-none"
                 {%- if new_url.startswith('/') %}
                 href="{{ new_url }}"
                 {%- else %}
@@ -57,22 +59,32 @@
                 title="{{ config['BOOTSTRAP_TABLE_NEW_TITLE'] }}">
                 {{ render_icon('plus-circle-fill') }}
             </a>
-        {%- endif %}
+            {%- endif %}
         </th>
-    {%- endif %}
-    </tr>
-    </thead>
+        {%- endif %}
+        </tr>
+        </thead>
     {%- endif %}
     <tbody>
     {%- for row in data %}
     <tr>
-        {%- for title in titles %}
-        {%- if title[0] == primary_key %}
-            <th scope="row">{{ row[title[0]] }}</th>
-        {%- else %}
-            <td>{{ row[title[0]] }}</td>
+        {%- if show_header %}
+            {%- for title in titles %}
+            {%- if title[0] == primary_key %}
+        <th scope="row">{{ row[title[0]] }}</th>
+            {%- else %}
+        <td>{{ row[title[0]] }}</td>
+            {%- endif %}
+            {%- endfor %}
+        {% else %}
+            {%- for item in row %}
+            {%- if item == primary_key %}
+        <th scope="row">{{ row[item] }}</th>
+            {%- else %}
+        <td>{{ row[item] }}</td>
+            {%- endif %}
+            {%- endfor %}
         {%- endif %}
-        {%- endfor %}
         {%- if show_actions %}
         <td>
             {%- if custom_actions %}

@@ -1,0 +1,10 @@
+{% from 'col_table.html' import render_colgroup_table %}
+<div id="show_tasks" class="col mr-auto mh-100 p-2 bg-white text-secondary"
+     style="max-height: 120px; overflow-y: auto; height: 120px; font-size: 0.7rem;">
+     {{ render_colgroup_table(tasks, table_classes='col-sm-12 p-0 m-0 table table-sm table-responsive table-striped ', 
+                              colgroup_classes=('col-1', 'col-2', 'col-1'), show_header=True,
+                              titles=[('id', '#'), ('name', 'name'), ('count', '#reports'), ('finished', '#done'),
+                                      ('date', 'last report date'), ('severity', 'last severity')], show_actions=True,
+                              custom_actions = [('pick reports', 'arrow-right-square-fill', ('/gvm/get_reports_from_task', 'id'))],
+                              primary_key=id, responsive=True) }}
+</div>

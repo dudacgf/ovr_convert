@@ -8,7 +8,7 @@ from yaml.dumper import SafeDumper
 from yaml.loader import SafeLoader
 import tempfile
 
-from flask import Blueprint, render_template, request, session, current_app, jsonify, send_file, after_this_request, Markup, escape
+from flask import Blueprint, render_template, session, jsonify
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import FileStorage
 from flask_session import Session
@@ -295,6 +295,15 @@ def new_session_configuration():
         session.pop('config')
     except:
         pass
+
+    if 'gvm_reports' in session:
+        session.pop('gvm_reports')
+        
+    if 'tasks' in session:
+        session.pop('tasks')
+        
+    if 'reports' in session:
+        session.pop('reports')
     
     session['config'] = dict()
         

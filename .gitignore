@@ -134,3 +134,7 @@ instance/
 
 # wing project files
 *.wpr
+
+# vscode project files
+.vscode/
+*.code-workspace

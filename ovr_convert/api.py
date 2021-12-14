@@ -8,7 +8,7 @@ from yaml.dumper import SafeDumper
 from yaml.loader import SafeLoader
 import tempfile
 
-from flask import Blueprint, render_template, session, jsonify
+from flask import Blueprint, render_template, session, jsonify, request, current_app, Markup, escape, send_file
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import FileStorage
 from flask_session import Session
@@ -118,6 +118,7 @@ def upload_filter_file():
 @api_bp.route('/erase_cve_includes', methods=['POST'])
 @api_bp.route('/erase_cve_excludes', methods=['POST'])
 def clean_filter_option():
+    print('aqui')
     filter_name = request.form.get('input_field_name', None)
     if not filter_name is None:
         [filter_class, filter_option] = filter_name.split('_')

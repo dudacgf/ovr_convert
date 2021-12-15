@@ -53,7 +53,7 @@ function erase_uploaded_files (server_url, input_id) {
                 $(show_input_id).html('');
                 $(show_input_id).css('display', 'none');
                 $(load_input_id).css('display', 'block');
-                pop_message('<span class="erasedbox">Uploaded xml reports erased</span>')
+                pop_message('Uploaded xml reports erased')
             } else if (response.status == 'error') {
                 pop_message(response.message)
             }

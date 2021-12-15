@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 from flask_session import Session
 from flask_bootstrap import Bootstrap
 
@@ -58,7 +58,7 @@ def lowerCamelCase(s):
     return s[0].lower() + s[1:]
 
 @app.route('/')
-def btf():
+def main_route():
     new_session_configuration()
 
     return render_template('index.html')
@@ -69,7 +69,7 @@ def test():
         if login_gvm():
             return render_template('test.html', tasks=get_tasks())
         else:
-            return 'could not login'
+            return jsonify({'status': 'error', 'messages': 'could not login to gvm with current credentials.'})
     else:
-        return 'no gvm sock to be used'
+        return jsonify({'status': 'error', 'messages': 'no gvm sock to be used.'})
 

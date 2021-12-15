@@ -1,3 +1,14 @@
+/* just pops a message using a field that gets visible when not empty
+   receives: message to be poped
+*/
+function pop_message(message) {
+    $('#show_message').html(message)
+    setTimeout(function() {
+       $('#show_message').html('');
+    }, 3000);
+    return;
+ }
+
 /* shows request response at #show_{input_div} */
 function show_response (input_id, response) {
     var show_input_id = '#show_' + input_id; 
@@ -37,15 +48,18 @@ function erase_uploaded_files (server_url, input_id) {
         processData: false,
         data: false,
         type: 'post',
+        success: function(response) {
+            if (response.status == 'success') {
+                $(show_input_id).html('');
+                $(show_input_id).css('display', 'none');
+                $(load_input_id).css('display', 'block');
+                pop_message('<span class="erasedbox">Uploaded xml reports erased</span>')
+            } else if (response.status == 'error') {
+                pop_message(response.message)
+            }
+        }
     });
     
-    $(show_input_id).html('<span class="erasedbox">Uploaded xml reports erased</span>');
-    setTimeout(function() { 
-        $(show_input_id).html('');
-        $(show_input_id).css('display', 'none');
-        $(load_input_id).css('display', 'block');
-    }, 3000);
-    return;
 };
 
 /* function to erase filters uploaded 
@@ -69,18 +83,17 @@ function erase_filter(server_url, input_id) {
         data: form_data,
         type: 'post',
         success: function (response) {
-            $(show_input_id).html('<span style="color: red;">all filters erased</span>')
+            if (response.status == 'success') {
+                $(show_input_id).html('');
+                $(show_input_id).css('display', 'none');
+                $(load_input_id).css('display', 'block');
+                pop_message(response.message)
+            }
         },
         error: function (response) {
-            $(show_input_id).html(response.message)
+            pop_message(response.message)
         }
     });
-
-    setTimeout(function() { 
-        $(show_input_id).html('');
-        $(show_input_id).css('display', 'none');
-        $(load_input_id).css('display', 'block');
-    }, 3000);
 
     return;
 }
@@ -230,42 +243,57 @@ function generate_report(msg_id) {
         type: "POST",
         url: "/api/generate_report",
         data: '',
-        xhrFields: {
-            responseType: 'blob' // to avoid binary data being mangled on charset conversion
+        contentType: false,
+        processData: false,
+        xhr: function() {
+            var xhr = new XMLHttpRequest();
+            xhr.contentType
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 2) {
+                    if (xhr.getAllResponseHeaders().indexOf('text/text') > 0) {
+                        xhr.responseType = "json";
+                    } else {
+                        xhr.responseType = "blob";
+                    }
+                }
+            };
+            return xhr;
         },
-        success: function(blob, status, xhr) {
-            // check for a filename
-            var filename = "";
-            var disposition = xhr.getResponseHeader('Content-Disposition');
-            if (disposition && disposition.indexOf('attachment') !== -1) {
-                var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-                var matches = filenameRegex.exec(disposition);
-                if (matches != null && matches[1]) filename = matches[1].replace(/['"]/g, '');
-            } else {
-                $('#' + msg_id).html('<span class="erasedbox">' + typeof(blob) + '</span>');
-            }
-    
-            var URL = window.URL || window.webkitURL;
-            var downloadUrl = URL.createObjectURL(blob);
-    
-            if (filename) {
-                // use HTML5 a[download] attribute to specify filename
-                var a = document.createElement("a");
-                // safari doesn't support this yet
-                if (typeof a.download === 'undefined') {
-                    window.location.href = downloadUrl;
+        success: function(response, status, xhr) {
+            var x = 1;
+            if (response.status == 'error') {
+                pop_message(response.message)
+            } else {           
+                // check for a filename
+                var blob = response
+                var filename = "";
+                var disposition = xhr.getResponseHeader('Content-Disposition');
+                if (disposition && disposition.indexOf('attachment') !== -1) {
+                    var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                    var matches = filenameRegex.exec(disposition);
+                    if (matches != null && matches[1]) filename = matches[1].replace(/['"]/g, '');
                 } else {
+                    pop_message('<span class="erasedbox">' + typeof(blob) + '</span>');
+                }
+        
+                var URL = window.URL || window.webkitURL;
+                var downloadUrl = URL.createObjectURL(blob);
+        
+                if (filename) {
+                    var a = document.createElement("a");
                     a.href = downloadUrl;
                     a.download = filename;
                     document.body.appendChild(a);
                     a.click();
                     $('body').remove(a);
+                } else {
+                    window.location.href = downloadUrl;
                 }
-            } else {
-                window.location.href = downloadUrl;
-            }
-    
-            setTimeout(function () { URL.revokeObjectURL(downloadUrl); }, 100); // cleanup
+                setTimeout(function () { URL.revokeObjectURL(downloadUrl); }, 100); // cleanup
+           }
+        },
+        error: function(response, status, xhr) {
+            pop_message(status)
         },
         complete: function() {
             var selector = 'input[type="radio"][name="format"]:checked'
@@ -274,7 +302,6 @@ function generate_report(msg_id) {
             $('#generate_report').attr('src', imgsrc) ;
         }
     });
-
 }
 
 function other_theme() {

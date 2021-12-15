@@ -23,7 +23,11 @@ $(document).ready(function (e) {
         previewTemplate: '<div></div>',
         init: function() {
             this.on('success', function(file, response) {
-                show_response('inputfiles', response);
+                if (response.status == 'success') {
+                    show_response('inputfiles', response.message);
+                } else if (response.status == 'error') {
+                    pop_message(response.message);
+                };
             });
             this.on('complete', function() {
                 this.removeAllFiles();
@@ -54,7 +58,11 @@ $(document).ready(function (e) {
         previewTemplate: '<div></div>',
         init: function() {
             this.on('success', function(file, response) {
-                show_response('{{ filter_id }}_{{ action }}', response);
+                if (response.status == 'success') {
+                    show_response('{{ filter_id }}_{{ action }}', response.message);
+                } else if (response.status == 'error') {
+                    pop_message(response.message);
+                };
             });
             this.on('complete', function() {
                 this.removeAllFiles();

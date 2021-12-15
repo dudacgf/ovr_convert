@@ -36,7 +36,7 @@ def upload_xml_reports():
             file.save(secure_name)
             
             if not valid_xml(secure_name):
-                return Markup(f'<span class="erasedbox">File {filename} is not a valid Greenbone Security Assistant XML Report</span>')
+                return jsonify({'status': 'error', 'message': 'File {secure_filename} is not a valid Greenbone Security Assistant XML Report.'})
             
             lines.append(filename)
             filesize = os.path.getsize(secure_name)
@@ -46,8 +46,8 @@ def upload_xml_reports():
             
     session['xml_reports'] = lines
     
-    return render_template('boxed_results.html', lines=dataTable, show_header=False,
-                           colgroup_classes=('col-1', 'col-auto', 'col-2', 'col-2'), primary_key='id') 
+    return jsonify({'status': 'success', 'message': render_template('boxed_results.html', lines=dataTable, show_header=False,
+                           colgroup_classes=('col-1', 'col-auto', 'col-2', 'col-2'), primary_key='id')})
 
 
 #
@@ -65,7 +65,7 @@ def erase_xml_reports():
         
         session.pop('xml_reports')
 
-    return 'OK'
+    return jsonify({'status': 'success', 'message': 'ok'})
 
 #
 # routes to include filters 
@@ -93,11 +93,11 @@ def upload_filter_file():
         for line in memfile.splitlines():
             if line != '':
                 if filter_class == 'networks' and not valid_network(escape(line)):
-                    return Markup(f'<span class="erasedbox">line {i} in {file.filename} is not a valid IP, IP-Range or Network CIDR:<br />{escape(line)}.</span>')
+                    return jsonify({'status': 'error', 'message': f'Line {i} in {Markup(file.filename)} is not a valid IP, IP-Range or Network CIDR: {Markup(line)}.'})
                 if filter_class == 'regex' and not valid_regex(escape(line)):
-                    return Markup(f'<span class="erasedbox">line {i} in {file.filename} is not a valid regular expression:<br />{escape(line)}.</span>')
+                    return jsonify({'status': 'error', 'message': f'line {i} in {Markup(file.filename)} is not a valid regular expression: {Markup(line)}.'})
                 if filter_class == 'cve' and not valid_cve(escape(line)):
-                    return Markup(f'<span class="erasedbox">line {i} in {file.filename} is not a valid CVE ID [CVE-yyyy-n+]:<br />{escape(line)}.</span>')
+                    return jsonify({'status': 'error', 'message': f'line {i} in {Markup(file.filename)} is not a valid CVE ID [CVE-yyyy-n+]: {Markup(line)}.'})
                     
                 filter_list.append(line)
                 dataTable.append({'id': i, filter_name: line})
@@ -105,8 +105,9 @@ def upload_filter_file():
     
         session['config'][filter_class][filter_option] = filter_list
 
-    return render_template('boxed_results.html', lines=dataTable, colgroup_classes=('col-1', 'col-auto'), show_header=False,
-                           primary_key='id') 
+    return jsonify({'status': 'success', 
+                    'message': render_template('boxed_results.html', lines=dataTable, colgroup_classes=('col-1', 'col-auto'), show_header=False,
+                           primary_key='id')}) 
 
 
 #
@@ -118,7 +119,6 @@ def upload_filter_file():
 @api_bp.route('/erase_cve_includes', methods=['POST'])
 @api_bp.route('/erase_cve_excludes', methods=['POST'])
 def clean_filter_option():
-    print('aqui')
     filter_name = request.form.get('input_field_name', None)
     if not filter_name is None:
         [filter_class, filter_option] = filter_name.split('_')
@@ -127,14 +127,11 @@ def clean_filter_option():
                 session['config'][filter_class].pop(filter_option)
             if len(session['config'][filter_class]) == 0:
                 session['config'].pop(filter_class)
-            resp = jsonify({'message': 'OK'})
-            resp.status = 200
+            resp = jsonify({'status': 'success', 'message': f'filter {filter_class}.{filter_option} erased.'})
         else:
-            resp = jsonify({'message': f'filter {filter_class} {filter_option} not set'})
-            resp.status = 200
+            resp = jsonify({'status': 'error', 'message': f'filter {filter_class} {filter_option} not set'})
     else:
-        resp = jsonify({'message': 'no filter name received. no teapot for you'})
-        resp.status = 200
+        resp = jsonify({'status': 'error', 'message': 'no filter name received. no teapot for you'})
         
     return resp
     
@@ -151,17 +148,14 @@ def set_flag():
         if not value is None:
             session['config'][flag_field] = value
                 
-    resp = jsonify({'message': 'OK'})
-    resp.status = 200
-    
-    return resp
-
+    return jsonify({'status': 'success', 'message': f'filter {flag_field.replace("_", ".")} set.'})
+   
 #
 # route to load configuration .yml file. the xml_reports, if already loaded, will not be changed
 @api_bp.route("/upload_configuration", methods=['POST'])
 def upload_configuration():
     if 'files[]' not in request.files:
-        return Markup('<span class="erasedbox">não recebi nada</span>')
+        return jsonify({'status': 'error', 'message': 'não recebi nada'})
 
     files = request.files.getlist('files[]')
     fp = FileStorage(files[0])
@@ -337,10 +331,14 @@ def generate_report():
         for filename in session['xml_reports']:
             fullpath_filename = os.path.join(current_app.config['UPLOAD_FOLDER'], secure_filename(filename))
             if not os.path.exists(fullpath_filename):
-                return Markup(f"could not find loaded file {secure_filename(filename)}.")
+                response = jsonify({'status': 'error', 'message': f'could not find loaded file {secure_filename(filename)}.'})
+                response.mimetype = 'text/text'
+                return response
             fullpath_filenames.append(fullpath_filename)
     else:
-        return jsonify("Please load at least one openvas xml report before converting")
+        response = jsonify({'status': 'error', 'message': 'Please load at least one openvas xml report before converting.'})
+        response.mimetype = 'text/text'
+        return response
     
     # saves current configuration in tmp file
     config_file_fp, config_file_path = tempfile.mkstemp(suffix='.yml')

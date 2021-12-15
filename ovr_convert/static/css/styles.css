@@ -102,3 +102,23 @@ bottom: -0.2rem;
 tr {
     line-height: 80%;
 }
+
+.content-message {
+    position: absolute;
+    top: 80%;
+    left: 30%;
+    width: 600px;
+    margin-top: 2%;
+    margin-bottom: 2%;
+    padding: 10px;
+    background-color: var(--dark);
+    color: var(--white);
+    border: 1px solid var(--dark);
+    border-radius: 10px;
+    font-size: x-small;
+    z-index:10000;
+}
+
+.content-message:empty {
+    display: none;
+}

@@ -98,3 +98,7 @@ filter: invert(100%);
 position: relative;
 bottom: -0.2rem;
 }
+
+tr {
+    line-height: 80%;
+}

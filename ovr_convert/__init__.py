@@ -2,7 +2,7 @@ import os
 
 from flask import Flask, render_template, jsonify
 from flask_session import Session
-from flask_bootstrap import Bootstrap
+from flask_bootstrap import Bootstrap4
 
 from .api import new_session_configuration
 from .gvm_api import get_gvm_sock, login_gvm, get_tasks
@@ -36,7 +36,7 @@ except:
     raise Exception('could not register gvm blueprint.')
 
 # create Bootstrap
-bootstrap = Bootstrap(app)
+bootstrap = Bootstrap4(app)
 
 # create instance dirs if any
 try:

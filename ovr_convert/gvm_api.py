@@ -1,6 +1,6 @@
 import sys
 
-from flask import Blueprint, render_template, request, session, current_app, jsonify, send_file, after_this_request, Markup, escape
+from flask import Blueprint, render_template, request, session, current_app, jsonify, send_file, after_this_request
 
 from gvm.connections import UnixSocketConnection
 from gvm.errors import GvmError
@@ -150,3 +150,4 @@ def get_results_from_report(report_uuid=None):
 @gvm_bp.route('/gvm/teste')
 def gvm_test():
     return 'estive aqui'
+

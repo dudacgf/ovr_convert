@@ -1,6 +1,6 @@
-Flask>=3.0.3
-Flask-Session>=0.8.0
-Bootstrap-Flask>=2.4.0
-PyYAML>=6.0
-OpenVAS-Reporting>=1.5.4
-defusedxml>=0.7.1
+Flask
+Flask-Session
+Bootstrap-Flask
+PyYAML
+OpenVAS-Reporting
+defusedxml

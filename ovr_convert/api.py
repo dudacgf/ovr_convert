@@ -9,7 +9,8 @@ from yaml.dumper import SafeDumper
 from yaml.loader import SafeLoader
 import tempfile
 
-from flask import Blueprint, render_template, session, jsonify, request, current_app, Markup, escape, send_file
+from markupsafe import Markup
+from flask import Blueprint, render_template, session, jsonify, request, current_app, send_file
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import FileStorage
 from flask_session import Session
@@ -94,11 +95,11 @@ def upload_filter_file():
         for line in memfile.splitlines():
             if line != '':
                 escapedFilename = pydash.escape(file.filename)
-                if filter_class == 'networks' and not valid_network(escape(line)):
+                if filter_class == 'networks' and not valid_network(pydash.escape(line)):
                     return jsonify({'status': 'error', 'message': f'Line {i} in {Markup(escapedFilename)} is not a valid IP, IP-Range or Network CIDR: {Markup(line)}.'})
-                if filter_class == 'regex' and not valid_regex(escape(line)):
+                if filter_class == 'regex' and not valid_regex(pydash.escape(line)):
                     return jsonify({'status': 'error', 'message': f'line {i} in {Markup(escapedFilename)} is not a valid regular expression: {Markup(line)}.'})
-                if filter_class == 'cve' and not valid_cve(escape(line)):
+                if filter_class == 'cve' and not valid_cve(pydash.escape(line)):
                     return jsonify({'status': 'error', 'message': f'line {i} in {Markup(escapedFilename)} is not a valid CVE ID [CVE-yyyy-n+]: {Markup(line)}.'})
                     
                 filter_list.append(line)
@@ -197,8 +198,8 @@ def upload_configuration():
             session['config']['networks'] = dict()
         if 'includes' in configs_read['networks']:
             for l in configs_read['networks']['includes']:
-                if not valid_network(escape(l)):
-                    resp['networks_includes'] = Markup(f'<span class="erasedbox">Invalid IP, IP Range or Network CIDR in networks.includes:<br />{escape(l)}.</span>')
+                if not valid_network(pydash.escape(l)):
+                    resp['networks_includes'] = Markup(f'<span class="erasedbox">Invalid IP, IP Range or Network CIDR in networks.includes:<br />{pydash.escape(l)}.</span>')
                     break
             if not 'networks_includes' in resp:
                 resp['networks_includes'] = render_template('boxed_results.html', show_headers=True,
@@ -209,7 +210,7 @@ def upload_configuration():
         if 'excludes' in configs_read['networks']:
             for l in configs_read['networks']['excludes']:
                 if not valid_network(l):
-                    resp['networks_excludes'] = Markup(f'<span class="erasedbox">Invalid IP, IP Range or Network CIDR in networks.excludes:<br />{escape(l)}.</span>')
+                    resp['networks_excludes'] = Markup(f'<span class="erasedbox">Invalid IP, IP Range or Network CIDR in networks.excludes:<br />{pydash.escape(l)}.</span>')
                     break
             if not 'networks_excludes' in resp:
                 resp['networks_excludes'] = render_template('boxed_results.html', 
@@ -222,8 +223,8 @@ def upload_configuration():
             session['config']['regex'] = dict()
         if 'includes' in configs_read['regex']:
             for l in configs_read['regex']['includes']:
-                if not valid_regex(escape(l)):
-                    resp['regex_includes'] = f'<span class="erasedbox">Invalid regular expression in regex.includes:<br />{escape(l)}.</span>'
+                if not valid_regex(pydash.escape(l)):
+                    resp['regex_includes'] = f'<span class="erasedbox">Invalid regular expression in regex.includes:<br />{pydash.escape(l)}.</span>'
                     break
             if not 'regex_includes' in resp:
                 resp['regex_includes'] = render_template('boxed_results.html', 
@@ -233,8 +234,8 @@ def upload_configuration():
                 session['config']['regex']['includes'] = configs_read['regex']['includes']
         if 'excludes' in configs_read['regex']:
             for l in configs_read['regex']['excludes']:
-                if not valid_regex(escape(l)):
-                    resp['regex_excludes'] = f'<span class="erasedbox">Invalid regular expression in regex.excludes:<br />{escape(l)}.</span>'
+                if not valid_regex(pydash.escape(l)):
+                    resp['regex_excludes'] = f'<span class="erasedbox">Invalid regular expression in regex.excludes:<br />{pydash.escape(l)}.</span>'
                     break
             if not 'regex_excludes' in resp:
                 resp['regex_excludes'] = render_template('boxed_results.html', 
@@ -248,8 +249,8 @@ def upload_configuration():
             session['config']['cve'] = dict()
         if 'includes' in configs_read['cve']:
             for l in configs_read['cve']['includes']:
-                if not valid_cve(escape(l)):
-                    resp['cve_includes'] = f'<span class="erasedbox">Invalid CVE id in cve.includes:<br />{escape(l)}.</span>'
+                if not valid_cve(pydash.escape(l)):
+                    resp['cve_includes'] = f'<span class="erasedbox">Invalid CVE id in cve.includes:<br />{pydash.escape(l)}.</span>'
                     break
             if not 'cve_includes' in resp:
                 resp['cve_includes'] = render_template('boxed_results.html', 
@@ -259,8 +260,8 @@ def upload_configuration():
                 session['config']['cve']['includes'] = configs_read['cve']['includes']
         if 'excludes' in configs_read['cve']:
             for l in configs_read['cve']['excludes']:
-                if not valid_cve(escape(l)):
-                    resp['cve_excludes'] = f'<span class="erasedbox">Invalid CVE id in cve.excludes:<br />{escape(l)}.</span>'
+                if not valid_cve(pydash.escape(l)):
+                    resp['cve_excludes'] = f'<span class="erasedbox">Invalid CVE id in cve.excludes:<br />{pydash.escape(l)}.</span>'
                     break
             if not 'cve_excludes' in resp:
                 resp['cve_excludes'] = render_template('boxed_results.html', show_table=True,

@@ -1,4 +1,5 @@
 import os
+import pydash
 from io import StringIO, BytesIO
 
 from .libs.utils import size_format, valid_xml, valid_network, valid_regex, valid_cve, make_data_table
@@ -92,12 +93,13 @@ def upload_filter_file():
         dataTable = []
         for line in memfile.splitlines():
             if line != '':
+                escapedFilename = pydash.escape(file.filename)
                 if filter_class == 'networks' and not valid_network(escape(line)):
-                    return jsonify({'status': 'error', 'message': f'Line {i} in {Markup(file.filename)} is not a valid IP, IP-Range or Network CIDR: {Markup(line)}.'})
+                    return jsonify({'status': 'error', 'message': f'Line {i} in {Markup(escapedFilename)} is not a valid IP, IP-Range or Network CIDR: {Markup(line)}.'})
                 if filter_class == 'regex' and not valid_regex(escape(line)):
-                    return jsonify({'status': 'error', 'message': f'line {i} in {Markup(file.filename)} is not a valid regular expression: {Markup(line)}.'})
+                    return jsonify({'status': 'error', 'message': f'line {i} in {Markup(escapedFilename)} is not a valid regular expression: {Markup(line)}.'})
                 if filter_class == 'cve' and not valid_cve(escape(line)):
-                    return jsonify({'status': 'error', 'message': f'line {i} in {Markup(file.filename)} is not a valid CVE ID [CVE-yyyy-n+]: {Markup(line)}.'})
+                    return jsonify({'status': 'error', 'message': f'line {i} in {Markup(escapedFilename)} is not a valid CVE ID [CVE-yyyy-n+]: {Markup(line)}.'})
                     
                 filter_list.append(line)
                 dataTable.append({'id': i, filter_name: line})

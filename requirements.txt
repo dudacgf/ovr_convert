@@ -2,5 +2,5 @@ Flask
 Flask-Session
 Bootstrap-Flask
 PyYAML
-OpenVAS-Reporting
+OpenVAS-Reporting>=1.6.0
 defusedxml
